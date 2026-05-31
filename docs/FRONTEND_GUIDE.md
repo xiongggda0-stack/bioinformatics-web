@@ -12,8 +12,13 @@ frontend/
     pipelines/
     algorithms/
     literatures/
+    databases/
+    search/
   components/
     Navbar.tsx
+    GlobalSearch.tsx
+    SearchResultCard.tsx
+    SearchResults.tsx
     PipelineBrowser.tsx
     MarkdownRenderer.tsx
     PipelineToc.tsx
@@ -75,6 +80,17 @@ frontend/
 - 标题、作者、期刊、年份、DOI
 - DOI 外链
 - 相关 Pipeline 和 Algorithm
+
+### Database
+
+- `/databases`：从后端读取数据库资源，支持关键词和分类筛选。
+- `/databases/tutorials/[id]`：展示独立数据库教程。
+
+### Search
+
+- 顶部 `GlobalSearch.tsx`：调用 `/api/search`，显示最多 8 条快速预览。
+- `/search`：完整搜索中心，支持资源类型筛选。
+- 搜索关键词和类型都写入 URL，便于刷新、收藏和分享。
 
 ## 数据请求模式
 

@@ -8,10 +8,7 @@ import DetailPageShell, {
 } from "@/components/DetailPageShell";
 import DocumentToc from "@/components/DocumentToc";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
-import {
-  getAllDatabaseTutorials,
-  getDatabaseTutorialById
-} from "@/lib/databaseResources";
+import { fetchDatabaseTutorial } from "@/lib/databaseApi";
 import { extractTocItems } from "@/lib/markdownToc";
 
 interface DatabaseTutorialPageProps {
@@ -63,12 +60,6 @@ const pipelineRecommendations: Record<
     }
   ]
 };
-
-export function generateStaticParams(): Array<{ id: string }> {
-  return getAllDatabaseTutorials().map(({ tutorial }) => ({
-    id: tutorial.id
-  }));
-}
 
 function TutorialSteps({ steps }: { steps: string[] }): JSX.Element {
   return (
@@ -129,10 +120,10 @@ function PipelineSuggestionCard({
   );
 }
 
-export default function DatabaseTutorialPage({
+export default async function DatabaseTutorialPage({
   params
-}: DatabaseTutorialPageProps): JSX.Element {
-  const detail = getDatabaseTutorialById(params.id);
+}: DatabaseTutorialPageProps): Promise<JSX.Element> {
+  const detail = await fetchDatabaseTutorial(params.id);
 
   if (detail === null) {
     notFound();

@@ -51,6 +51,18 @@ docker compose exec backend python -m py_compile init_db.py
 docker compose exec frontend npx tsc --noEmit --pretty false
 ```
 
+后端测试：
+
+```powershell
+docker compose exec backend python -m pytest -q
+```
+
+统一搜索接口验证：
+
+```powershell
+Invoke-RestMethod "http://localhost:8000/api/search?q=RNA-seq&type=all&limit=10"
+```
+
 查看日志：
 
 ```powershell

@@ -1,9 +1,5 @@
 import Link from "next/link";
-import {
-  databaseCategories,
-  databaseResources,
-  getAllDatabaseTutorials
-} from "@/lib/databaseResources";
+import { fetchDatabaseResources } from "@/lib/databaseApi";
 
 interface FeatureCard {
   title: string;
@@ -111,11 +107,20 @@ async function fetchResourceCount(path: string): Promise<number> {
 }
 
 async function getPlatformMetrics(): Promise<PlatformMetric[]> {
-  const [pipelineCount, algorithmCount, literatureCount] = await Promise.all([
+  const [pipelineCount, algorithmCount, literatureCount, databaseResources] =
+    await Promise.all([
     fetchResourceCount("/api/pipelines"),
     fetchResourceCount("/api/algorithms"),
-    fetchResourceCount("/api/literatures")
-  ]);
+    fetchResourceCount("/api/literatures"),
+    fetchDatabaseResources().catch(() => [])
+    ]);
+  const categoryCount = new Set(
+    databaseResources.map((resource) => resource.categoryKey)
+  ).size;
+  const tutorialCount = databaseResources.reduce(
+    (count, resource) => count + (resource.tutorials?.length ?? 0),
+    0
+  );
 
   return [
     {
@@ -131,11 +136,11 @@ async function getPlatformMetrics(): Promise<PlatformMetric[]> {
     {
       label: "数据库资源",
       value: String(databaseResources.length),
-      description: `按 ${databaseCategories.length} 个主题分类组织公共数据入口。`
+      description: `按 ${categoryCount} 个主题分类组织公共数据入口。`
     },
     {
       label: "文献与教程",
-      value: String(literatureCount + getAllDatabaseTutorials().length),
+      value: String(literatureCount + tutorialCount),
       description: "把论文证据、数据库使用示例和分析流程串成学习路径。"
     }
   ];

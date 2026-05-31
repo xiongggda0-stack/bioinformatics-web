@@ -2,13 +2,11 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  databaseCategories,
-  type DatabaseResource
-} from "@/lib/databaseResources";
+import type { DatabaseResource } from "@/lib/databaseTypes";
 
 interface DatabaseBrowserProps {
   resources: DatabaseResource[];
+  initialKeyword?: string;
 }
 
 const categoryStyles: Record<string, string> = {
@@ -64,9 +62,10 @@ function getCategoryStyle(categoryKey: string): string {
 }
 
 export default function DatabaseBrowser({
-  resources
+  resources,
+  initialKeyword = ""
 }: DatabaseBrowserProps): JSX.Element {
-  const [keyword, setKeyword] = useState<string>("");
+  const [keyword, setKeyword] = useState<string>(initialKeyword);
   const [category, setCategory] = useState<string>("all");
   const [dataType, setDataType] = useState<string>("all");
   const [species, setSpecies] = useState<string>("all");
@@ -79,6 +78,15 @@ export default function DatabaseBrowser({
     () => uniqueSorted(resources.flatMap((resource) => resource.species)),
     [resources]
   );
+  const categories = useMemo(() => {
+    const items = new Map<string, string>();
+    resources.forEach((resource) => {
+      items.set(resource.categoryKey, resource.categoryName);
+    });
+    return Array.from(items, ([key, name]) => ({ key, name })).sort((a, b) =>
+      a.name.localeCompare(b.name, "zh-CN")
+    );
+  }, [resources]);
 
   const filteredResources = useMemo(
     () =>
@@ -137,7 +145,7 @@ export default function DatabaseBrowser({
           <FilterSelect
             label="数据库分类"
             value={category}
-            options={databaseCategories.map((item) => ({
+            options={categories.map((item) => ({
               value: item.key,
               label: item.name
             }))}
