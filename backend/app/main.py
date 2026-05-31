@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.controllers.algorithm_controller import router as algorithm_router
+from app.api.v1.controllers.database_controller import router as database_router
 from app.api.v1.controllers.health_controller import router as health_router
 from app.api.v1.controllers.literature_controller import router as literature_router
 from app.api.v1.controllers.pipeline_controller import router as pipeline_router
@@ -37,6 +38,7 @@ def create_app() -> FastAPI:
     app.include_router(health_router)
     app.include_router(pipeline_router)
     app.include_router(algorithm_router)
+    app.include_router(database_router)
     app.include_router(literature_router)
 
     return app
