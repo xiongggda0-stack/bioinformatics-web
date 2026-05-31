@@ -1,0 +1,1459 @@
+[
+  {
+    "slug": "ncbi",
+    "name": "NCBI",
+    "full_name": "National Center for Biotechnology Information",
+    "category_key": "portal",
+    "category_name": "综合门户",
+    "description": "全球最常用的生物信息综合入口，覆盖文献、序列、基因、基因组、变异和表达数据。",
+    "use_cases_json": [
+      "查基因",
+      "查序列",
+      "查文献",
+      "下载公共数据"
+    ],
+    "data_types_json": [
+      "Sequence",
+      "Genome",
+      "Gene",
+      "Literature"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant",
+      "Microbe"
+    ],
+    "tags_json": [
+      "Public Data",
+      "API",
+      "Download"
+    ],
+    "url": "https://www.ncbi.nlm.nih.gov/",
+    "download_url": null,
+    "api_url": "https://www.ncbi.nlm.nih.gov/books/NBK25501/",
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "embl-ebi",
+    "name": "EMBL-EBI",
+    "full_name": "European Molecular Biology Laboratory - European Bioinformatics Institute",
+    "category_key": "portal",
+    "category_name": "综合门户",
+    "description": "欧洲核心生物数据平台，整合基因组、蛋白、结构、表达、通路和化学信息资源。",
+    "use_cases_json": [
+      "跨库检索",
+      "下载表达数据",
+      "查蛋白结构",
+      "查通路"
+    ],
+    "data_types_json": [
+      "Genome",
+      "Expression",
+      "Protein",
+      "Pathway"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant",
+      "Microbe"
+    ],
+    "tags_json": [
+      "Public Data",
+      "API",
+      "Download"
+    ],
+    "url": "https://www.ebi.ac.uk/",
+    "download_url": null,
+    "api_url": "https://www.ebi.ac.uk/ebisearch/documentation.ebi",
+    "region": "Europe",
+    "rating": 5
+  },
+  {
+    "slug": "ddbj",
+    "name": "DDBJ",
+    "full_name": "DNA Data Bank of Japan",
+    "category_key": "portal",
+    "category_name": "综合门户",
+    "description": "日本 DNA 数据库，与 NCBI 和 ENA 共同组成国际核酸序列数据库合作体系。",
+    "use_cases_json": [
+      "提交序列",
+      "检索核酸数据",
+      "下载 DRA 数据"
+    ],
+    "data_types_json": [
+      "Sequence",
+      "Raw Reads",
+      "Genome"
+    ],
+    "species_json": [
+      "Human",
+      "Plant",
+      "Microbe"
+    ],
+    "tags_json": [
+      "Public Data",
+      "Download"
+    ],
+    "url": "https://www.ddbj.nig.ac.jp/",
+    "download_url": null,
+    "api_url": null,
+    "region": "Japan",
+    "rating": 4
+  },
+  {
+    "slug": "pubmed",
+    "name": "PubMed",
+    "full_name": "PubMed Literature Database",
+    "category_key": "literature",
+    "category_name": "文献与知识",
+    "description": "生命科学和医学文献检索首选入口，适合查方法论文、PMID 和研究证据。",
+    "use_cases_json": [
+      "查论文",
+      "查方法出处",
+      "找综述"
+    ],
+    "data_types_json": [
+      "Literature",
+      "PMID"
+    ],
+    "species_json": [
+      "All"
+    ],
+    "tags_json": [
+      "Literature",
+      "Evidence"
+    ],
+    "url": "https://pubmed.ncbi.nlm.nih.gov/",
+    "download_url": null,
+    "api_url": "https://www.ncbi.nlm.nih.gov/books/NBK25501/",
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "europe-pmc",
+    "name": "Europe PMC",
+    "full_name": "Europe PubMed Central",
+    "category_key": "literature",
+    "category_name": "文献与知识",
+    "description": "开放文献平台，适合检索全文、预印本、基金信息和文献引用网络。",
+    "use_cases_json": [
+      "查开放全文",
+      "查预印本",
+      "追踪引用"
+    ],
+    "data_types_json": [
+      "Literature",
+      "Full Text"
+    ],
+    "species_json": [
+      "All"
+    ],
+    "tags_json": [
+      "Open Access",
+      "API"
+    ],
+    "url": "https://europepmc.org/",
+    "download_url": null,
+    "api_url": "https://europepmc.org/RestfulWebService",
+    "region": "Europe",
+    "rating": 4
+  },
+  {
+    "slug": "ensembl",
+    "name": "Ensembl",
+    "full_name": "Ensembl Genome Browser",
+    "category_key": "genome",
+    "category_name": "基因组与注释",
+    "description": "常用脊椎动物基因组浏览器，提供基因结构、转录本、坐标、同源基因和 BioMart 下载。",
+    "use_cases_json": [
+      "查基因坐标",
+      "下载 GTF",
+      "查同源基因",
+      "ID 转换"
+    ],
+    "data_types_json": [
+      "Genome",
+      "Gene Annotation",
+      "GTF"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Vertebrates"
+    ],
+    "tags_json": [
+      "Genome Browser",
+      "BioMart",
+      "Download"
+    ],
+    "url": "https://www.ensembl.org/",
+    "download_url": "https://ftp.ensembl.org/pub/",
+    "api_url": "https://rest.ensembl.org/",
+    "region": "Europe",
+    "rating": 5
+  },
+  {
+    "slug": "ucsc",
+    "name": "UCSC Genome Browser",
+    "full_name": "University of California Santa Cruz Genome Browser",
+    "category_key": "genome",
+    "category_name": "基因组与注释",
+    "description": "经典基因组浏览器，适合查看基因坐标、peak、保守性、表观组和自定义 track。",
+    "use_cases_json": [
+      "看基因组区域",
+      "上传自定义 track",
+      "查保守性",
+      "看 ENCODE track"
+    ],
+    "data_types_json": [
+      "Genome Browser",
+      "Tracks",
+      "Annotation"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Model Organisms"
+    ],
+    "tags_json": [
+      "Genome Browser",
+      "Visualization",
+      "Download"
+    ],
+    "url": "https://genome.ucsc.edu/",
+    "download_url": "https://hgdownload.soe.ucsc.edu/",
+    "api_url": null,
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "ncbi-genome",
+    "name": "NCBI Genome",
+    "full_name": "NCBI Genome Database",
+    "category_key": "genome",
+    "category_name": "基因组与注释",
+    "description": "NCBI 参考基因组和组装信息入口，适合查物种 genome assembly 和下载 FASTA/GFF。",
+    "use_cases_json": [
+      "下载参考基因组",
+      "查 assembly",
+      "查物种基因组版本"
+    ],
+    "data_types_json": [
+      "Genome",
+      "Assembly",
+      "FASTA",
+      "GFF"
+    ],
+    "species_json": [
+      "Human",
+      "Plant",
+      "Microbe",
+      "Animal"
+    ],
+    "tags_json": [
+      "Reference",
+      "Download"
+    ],
+    "url": "https://www.ncbi.nlm.nih.gov/genome/",
+    "download_url": "https://ftp.ncbi.nlm.nih.gov/genomes/",
+    "api_url": null,
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "refseq",
+    "name": "RefSeq",
+    "full_name": "NCBI Reference Sequence Database",
+    "category_key": "genome",
+    "category_name": "基因组与注释",
+    "description": "NCBI 人工维护参考序列集合，常用于基因、转录本、蛋白和参考注释。",
+    "use_cases_json": [
+      "查标准转录本",
+      "查蛋白序列",
+      "参考注释"
+    ],
+    "data_types_json": [
+      "Transcript",
+      "Protein",
+      "Genome"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Microbe"
+    ],
+    "tags_json": [
+      "Reference",
+      "Curated"
+    ],
+    "url": "https://www.ncbi.nlm.nih.gov/refseq/",
+    "download_url": "https://ftp.ncbi.nlm.nih.gov/refseq/",
+    "api_url": null,
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "sra",
+    "name": "SRA",
+    "full_name": "Sequence Read Archive",
+    "category_key": "raw-sequence",
+    "category_name": "原始测序数据",
+    "description": "NCBI 原始测序 reads 数据库，适合下载公开 FASTQ/SRA 用于复现或再分析。",
+    "use_cases_json": [
+      "下载 FASTQ",
+      "复现论文数据",
+      "批量公共数据挖掘"
+    ],
+    "data_types_json": [
+      "Raw Reads",
+      "FASTQ",
+      "SRA"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant",
+      "Microbe"
+    ],
+    "tags_json": [
+      "Download",
+      "Public Data"
+    ],
+    "url": "https://www.ncbi.nlm.nih.gov/sra",
+    "download_url": "https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software",
+    "api_url": null,
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "ena",
+    "name": "ENA",
+    "full_name": "European Nucleotide Archive",
+    "category_key": "raw-sequence",
+    "category_name": "原始测序数据",
+    "description": "欧洲核酸和原始测序数据仓库，下载 FASTQ 链接清晰，适合批量下载公共数据。",
+    "use_cases_json": [
+      "下载 FASTQ",
+      "检索测序项目",
+      "跨库获取原始数据"
+    ],
+    "data_types_json": [
+      "Raw Reads",
+      "FASTQ",
+      "Sequence"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant",
+      "Microbe"
+    ],
+    "tags_json": [
+      "Download",
+      "API",
+      "Public Data"
+    ],
+    "url": "https://www.ebi.ac.uk/ena/browser/home",
+    "download_url": null,
+    "api_url": "https://www.ebi.ac.uk/ena/portal/api/",
+    "region": "Europe",
+    "rating": 5
+  },
+  {
+    "slug": "geo",
+    "name": "GEO",
+    "full_name": "Gene Expression Omnibus",
+    "category_key": "expression",
+    "category_name": "转录组表达",
+    "description": "NCBI 功能基因组数据仓库，收录 RNA-seq、芯片、甲基化、ChIP-seq 等项目。",
+    "use_cases_json": [
+      "找表达数据",
+      "下载表达矩阵",
+      "复现论文"
+    ],
+    "data_types_json": [
+      "RNA-seq",
+      "Microarray",
+      "Expression Matrix"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant"
+    ],
+    "tags_json": [
+      "Expression",
+      "Public Data",
+      "Download"
+    ],
+    "url": "https://www.ncbi.nlm.nih.gov/geo/",
+    "download_url": null,
+    "api_url": "https://www.ncbi.nlm.nih.gov/geo/info/geo_paccess.html",
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "arrayexpress",
+    "name": "ArrayExpress",
+    "full_name": "ArrayExpress Archive",
+    "category_key": "expression",
+    "category_name": "转录组表达",
+    "description": "EMBL-EBI 表达实验归档库，包含芯片和测序表达项目。",
+    "use_cases_json": [
+      "检索表达实验",
+      "下载补充矩阵",
+      "查实验设计"
+    ],
+    "data_types_json": [
+      "Expression",
+      "Microarray",
+      "RNA-seq"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant"
+    ],
+    "tags_json": [
+      "Expression",
+      "Archive"
+    ],
+    "url": "https://www.ebi.ac.uk/biostudies/arrayexpress",
+    "download_url": null,
+    "api_url": null,
+    "region": "Europe",
+    "rating": 4
+  },
+  {
+    "slug": "expression-atlas",
+    "name": "Expression Atlas",
+    "full_name": "EMBL-EBI Expression Atlas",
+    "category_key": "expression",
+    "category_name": "转录组表达",
+    "description": "提供跨组织、物种、条件的基因表达查询，适合快速查看基因表达模式。",
+    "use_cases_json": [
+      "查基因表达",
+      "看组织特异性",
+      "表达模式探索"
+    ],
+    "data_types_json": [
+      "Expression",
+      "Baseline",
+      "Differential"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant"
+    ],
+    "tags_json": [
+      "Expression",
+      "Visualization"
+    ],
+    "url": "https://www.ebi.ac.uk/gxa/home",
+    "download_url": null,
+    "api_url": null,
+    "region": "Europe",
+    "rating": 4
+  },
+  {
+    "slug": "hca",
+    "name": "Human Cell Atlas",
+    "full_name": "Human Cell Atlas Data Portal",
+    "category_key": "single-cell",
+    "category_name": "单细胞与空间组学",
+    "description": "人类细胞图谱数据入口，适合寻找组织级单细胞参考数据和细胞类型图谱。",
+    "use_cases_json": [
+      "查人类单细胞图谱",
+      "找参考数据",
+      "细胞类型注释参考"
+    ],
+    "data_types_json": [
+      "scRNA-seq",
+      "Spatial",
+      "Cell Atlas"
+    ],
+    "species_json": [
+      "Human"
+    ],
+    "tags_json": [
+      "Single-cell",
+      "Atlas",
+      "Download"
+    ],
+    "url": "https://data.humancellatlas.org/",
+    "download_url": null,
+    "api_url": null,
+    "region": "Global",
+    "rating": 5
+  },
+  {
+    "slug": "cellxgene",
+    "name": "CELLxGENE",
+    "full_name": "CZ CELLxGENE Discover",
+    "category_key": "single-cell",
+    "category_name": "单细胞与空间组学",
+    "description": "交互式单细胞数据浏览和下载平台，适合查看公开 h5ad 数据和细胞注释。",
+    "use_cases_json": [
+      "浏览单细胞数据",
+      "下载 h5ad",
+      "比较细胞类型"
+    ],
+    "data_types_json": [
+      "scRNA-seq",
+      "h5ad",
+      "Cell Annotation"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse"
+    ],
+    "tags_json": [
+      "Single-cell",
+      "Visualization",
+      "Download"
+    ],
+    "url": "https://cellxgene.cziscience.com/",
+    "download_url": null,
+    "api_url": "https://chanzuckerberg.github.io/cellxgene-census/",
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "single-cell-portal",
+    "name": "Single Cell Portal",
+    "full_name": "Broad Institute Single Cell Portal",
+    "category_key": "single-cell",
+    "category_name": "单细胞与空间组学",
+    "description": "Broad Institute 单细胞研究数据平台，适合查找研究项目、marker 和可视化结果。",
+    "use_cases_json": [
+      "查单细胞研究",
+      "看 marker",
+      "下载数据"
+    ],
+    "data_types_json": [
+      "scRNA-seq",
+      "Metadata",
+      "Visualization"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse"
+    ],
+    "tags_json": [
+      "Single-cell",
+      "Visualization"
+    ],
+    "url": "https://singlecell.broadinstitute.org/single_cell",
+    "download_url": null,
+    "api_url": null,
+    "region": "USA",
+    "rating": 4
+  },
+  {
+    "slug": "10x-datasets",
+    "name": "10x Datasets",
+    "full_name": "10x Genomics Public Datasets",
+    "category_key": "single-cell",
+    "category_name": "单细胞与空间组学",
+    "description": "10x 官方示例数据集合，适合学习 Cell Ranger、Seurat、Scanpy 和 Visium 流程。",
+    "use_cases_json": [
+      "下载示例数据",
+      "练习单细胞流程",
+      "测试软件参数"
+    ],
+    "data_types_json": [
+      "scRNA-seq",
+      "Visium",
+      "Multiome"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse"
+    ],
+    "tags_json": [
+      "Tutorial Data",
+      "Download"
+    ],
+    "url": "https://www.10xgenomics.com/datasets",
+    "download_url": null,
+    "api_url": null,
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "hubmap",
+    "name": "HuBMAP",
+    "full_name": "Human BioMolecular Atlas Program",
+    "category_key": "single-cell",
+    "category_name": "单细胞与空间组学",
+    "description": "人体组织空间和单细胞多组学图谱项目，适合空间组学和组织定位参考。",
+    "use_cases_json": [
+      "查空间组学数据",
+      "组织图谱",
+      "多组学参考"
+    ],
+    "data_types_json": [
+      "Spatial",
+      "Single-cell",
+      "Proteomics"
+    ],
+    "species_json": [
+      "Human"
+    ],
+    "tags_json": [
+      "Atlas",
+      "Spatial",
+      "Download"
+    ],
+    "url": "https://portal.hubmapconsortium.org/",
+    "download_url": null,
+    "api_url": null,
+    "region": "USA",
+    "rating": 4
+  },
+  {
+    "slug": "clinvar",
+    "name": "ClinVar",
+    "full_name": "ClinVar",
+    "category_key": "variant",
+    "category_name": "变异与临床注释",
+    "description": "临床变异解释数据库，提供变异与疾病、致病性和证据提交记录。",
+    "use_cases_json": [
+      "查变异致病性",
+      "临床注释",
+      "遗传病解释"
+    ],
+    "data_types_json": [
+      "Variant",
+      "Clinical Significance"
+    ],
+    "species_json": [
+      "Human"
+    ],
+    "tags_json": [
+      "Clinical",
+      "Variant",
+      "Download"
+    ],
+    "url": "https://www.ncbi.nlm.nih.gov/clinvar/",
+    "download_url": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/",
+    "api_url": null,
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "gnomad",
+    "name": "gnomAD",
+    "full_name": "Genome Aggregation Database",
+    "category_key": "variant",
+    "category_name": "变异与临床注释",
+    "description": "大规模人群变异频率数据库，适合过滤常见变异和解释稀有变异。",
+    "use_cases_json": [
+      "查人群频率",
+      "过滤常见变异",
+      "稀有病分析"
+    ],
+    "data_types_json": [
+      "Variant",
+      "Allele Frequency",
+      "VCF"
+    ],
+    "species_json": [
+      "Human"
+    ],
+    "tags_json": [
+      "Population",
+      "Variant",
+      "Download"
+    ],
+    "url": "https://gnomad.broadinstitute.org/",
+    "download_url": "https://gnomad.broadinstitute.org/downloads",
+    "api_url": null,
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "dbsnp",
+    "name": "dbSNP",
+    "full_name": "Database of Single Nucleotide Polymorphisms",
+    "category_key": "variant",
+    "category_name": "变异与临床注释",
+    "description": "NCBI SNP 和小变异数据库，适合查询 rsID、变异坐标和基础注释。",
+    "use_cases_json": [
+      "查 rsID",
+      "变异坐标转换",
+      "基础 SNP 注释"
+    ],
+    "data_types_json": [
+      "SNP",
+      "Variant",
+      "rsID"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant"
+    ],
+    "tags_json": [
+      "Variant",
+      "Reference"
+    ],
+    "url": "https://www.ncbi.nlm.nih.gov/snp/",
+    "download_url": null,
+    "api_url": null,
+    "region": "USA",
+    "rating": 4
+  },
+  {
+    "slug": "1000genomes",
+    "name": "1000 Genomes",
+    "full_name": "1000 Genomes Project",
+    "category_key": "variant",
+    "category_name": "变异与临床注释",
+    "description": "经典人群基因组项目，提供不同人群的公开变异数据。",
+    "use_cases_json": [
+      "查人群变异",
+      "下载 VCF",
+      "方法测试"
+    ],
+    "data_types_json": [
+      "WGS",
+      "Variant",
+      "VCF"
+    ],
+    "species_json": [
+      "Human"
+    ],
+    "tags_json": [
+      "Population",
+      "Download"
+    ],
+    "url": "https://www.internationalgenome.org/",
+    "download_url": "https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/",
+    "api_url": null,
+    "region": "Global",
+    "rating": 4
+  },
+  {
+    "slug": "gwas-catalog",
+    "name": "GWAS Catalog",
+    "full_name": "NHGRI-EBI GWAS Catalog",
+    "category_key": "variant",
+    "category_name": "变异与临床注释",
+    "description": "GWAS 研究和性状关联变异数据库，适合查 SNP 与疾病/性状关联。",
+    "use_cases_json": [
+      "查性状关联",
+      "候选位点解释",
+      "遗传关联证据"
+    ],
+    "data_types_json": [
+      "GWAS",
+      "Variant",
+      "Trait"
+    ],
+    "species_json": [
+      "Human"
+    ],
+    "tags_json": [
+      "GWAS",
+      "Trait",
+      "API"
+    ],
+    "url": "https://www.ebi.ac.uk/gwas/",
+    "download_url": null,
+    "api_url": "https://www.ebi.ac.uk/gwas/rest/docs/api",
+    "region": "Europe",
+    "rating": 5
+  },
+  {
+    "slug": "gdc",
+    "name": "GDC / TCGA",
+    "full_name": "Genomic Data Commons",
+    "category_key": "cancer",
+    "category_name": "肿瘤组学",
+    "description": "NCI 癌症组学数据门户，整合 TCGA 等项目的表达、突变、CNV 和临床数据。",
+    "use_cases_json": [
+      "下载 TCGA",
+      "肿瘤表达分析",
+      "突变和临床关联"
+    ],
+    "data_types_json": [
+      "Cancer",
+      "RNA-seq",
+      "Mutation",
+      "Clinical"
+    ],
+    "species_json": [
+      "Human"
+    ],
+    "tags_json": [
+      "Cancer",
+      "TCGA",
+      "Download",
+      "API"
+    ],
+    "url": "https://portal.gdc.cancer.gov/",
+    "download_url": null,
+    "api_url": "https://docs.gdc.cancer.gov/API/Users_Guide/Getting_Started/",
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "cbioportal",
+    "name": "cBioPortal",
+    "full_name": "cBioPortal for Cancer Genomics",
+    "category_key": "cancer",
+    "category_name": "肿瘤组学",
+    "description": "癌症多组学可视化和探索平台，适合快速查看突变、表达、CNV 和生存关联。",
+    "use_cases_json": [
+      "癌症基因查询",
+      "突变频率",
+      "生存分析",
+      "队列探索"
+    ],
+    "data_types_json": [
+      "Cancer",
+      "Mutation",
+      "CNV",
+      "Expression"
+    ],
+    "species_json": [
+      "Human"
+    ],
+    "tags_json": [
+      "Cancer",
+      "Visualization",
+      "API"
+    ],
+    "url": "https://www.cbioportal.org/",
+    "download_url": null,
+    "api_url": "https://www.cbioportal.org/api/swagger-ui/",
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "icgc",
+    "name": "ICGC",
+    "full_name": "International Cancer Genome Consortium",
+    "category_key": "cancer",
+    "category_name": "肿瘤组学",
+    "description": "国际癌症基因组联盟数据资源，适合跨癌种、跨项目查找癌症组学数据。",
+    "use_cases_json": [
+      "查癌症队列",
+      "跨项目比较",
+      "癌症变异"
+    ],
+    "data_types_json": [
+      "Cancer",
+      "WGS",
+      "Mutation"
+    ],
+    "species_json": [
+      "Human"
+    ],
+    "tags_json": [
+      "Cancer",
+      "Cohort"
+    ],
+    "url": "https://dcc.icgc.org/",
+    "download_url": null,
+    "api_url": null,
+    "region": "Global",
+    "rating": 4
+  },
+  {
+    "slug": "uniprot",
+    "name": "UniProt",
+    "full_name": "Universal Protein Resource",
+    "category_key": "protein",
+    "category_name": "蛋白与结构",
+    "description": "蛋白序列、功能、结构域、GO 注释和交叉引用的核心数据库。",
+    "use_cases_json": [
+      "查蛋白功能",
+      "查结构域",
+      "ID 转换",
+      "下载蛋白序列"
+    ],
+    "data_types_json": [
+      "Protein",
+      "Function",
+      "FASTA"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant",
+      "Microbe"
+    ],
+    "tags_json": [
+      "Protein",
+      "Curated",
+      "API"
+    ],
+    "url": "https://www.uniprot.org/",
+    "download_url": null,
+    "api_url": "https://www.uniprot.org/help/api",
+    "region": "Europe",
+    "rating": 5
+  },
+  {
+    "slug": "pdb",
+    "name": "PDB",
+    "full_name": "Protein Data Bank",
+    "category_key": "protein",
+    "category_name": "蛋白与结构",
+    "description": "实验解析蛋白和核酸三维结构数据库，适合结构生物学和功能解释。",
+    "use_cases_json": [
+      "查蛋白结构",
+      "下载 PDB",
+      "结构功能解释"
+    ],
+    "data_types_json": [
+      "Protein Structure",
+      "PDB"
+    ],
+    "species_json": [
+      "All"
+    ],
+    "tags_json": [
+      "Structure",
+      "Download",
+      "API"
+    ],
+    "url": "https://www.rcsb.org/",
+    "download_url": null,
+    "api_url": "https://data.rcsb.org/",
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "alphafold",
+    "name": "AlphaFold DB",
+    "full_name": "AlphaFold Protein Structure Database",
+    "category_key": "protein",
+    "category_name": "蛋白与结构",
+    "description": "大规模蛋白结构预测数据库，适合没有实验结构时快速查看结构预测。",
+    "use_cases_json": [
+      "查预测结构",
+      "下载 PDB/mmCIF",
+      "结构域判断"
+    ],
+    "data_types_json": [
+      "Predicted Structure",
+      "Protein"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant",
+      "Microbe"
+    ],
+    "tags_json": [
+      "Structure",
+      "AI",
+      "Download"
+    ],
+    "url": "https://alphafold.ebi.ac.uk/",
+    "download_url": null,
+    "api_url": "https://alphafold.ebi.ac.uk/api-docs",
+    "region": "Europe",
+    "rating": 5
+  },
+  {
+    "slug": "hpa",
+    "name": "Human Protein Atlas",
+    "full_name": "Human Protein Atlas",
+    "category_key": "protein",
+    "category_name": "蛋白与结构",
+    "description": "人类蛋白表达、组织定位、细胞定位和病理表达数据库。",
+    "use_cases_json": [
+      "查组织表达",
+      "查细胞定位",
+      "肿瘤蛋白表达"
+    ],
+    "data_types_json": [
+      "Protein Expression",
+      "Tissue",
+      "Pathology"
+    ],
+    "species_json": [
+      "Human"
+    ],
+    "tags_json": [
+      "Protein",
+      "Expression",
+      "Visualization"
+    ],
+    "url": "https://www.proteinatlas.org/",
+    "download_url": "https://www.proteinatlas.org/about/download",
+    "api_url": null,
+    "region": "Europe",
+    "rating": 5
+  },
+  {
+    "slug": "go",
+    "name": "Gene Ontology",
+    "full_name": "Gene Ontology Resource",
+    "category_key": "pathway",
+    "category_name": "通路与功能富集",
+    "description": "基因功能注释标准体系，覆盖生物过程、分子功能和细胞组分。",
+    "use_cases_json": [
+      "GO 富集",
+      "功能注释",
+      "基因集解释"
+    ],
+    "data_types_json": [
+      "Ontology",
+      "Annotation"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant",
+      "Microbe"
+    ],
+    "tags_json": [
+      "Enrichment",
+      "Ontology"
+    ],
+    "url": "https://geneontology.org/",
+    "download_url": "https://geneontology.org/docs/download-ontology/",
+    "api_url": null,
+    "region": "Global",
+    "rating": 5
+  },
+  {
+    "slug": "kegg",
+    "name": "KEGG",
+    "full_name": "Kyoto Encyclopedia of Genes and Genomes",
+    "category_key": "pathway",
+    "category_name": "通路与功能富集",
+    "description": "通路、代谢、疾病和药物知识库，常用于 KEGG pathway 富集分析。",
+    "use_cases_json": [
+      "KEGG 富集",
+      "代谢通路",
+      "通路图解释"
+    ],
+    "data_types_json": [
+      "Pathway",
+      "Gene Set",
+      "Metabolism"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant",
+      "Microbe"
+    ],
+    "tags_json": [
+      "Pathway",
+      "Enrichment"
+    ],
+    "url": "https://www.kegg.jp/",
+    "download_url": null,
+    "api_url": "https://www.kegg.jp/kegg/rest/keggapi.html",
+    "region": "Japan",
+    "rating": 5
+  },
+  {
+    "slug": "reactome",
+    "name": "Reactome",
+    "full_name": "Reactome Pathway Database",
+    "category_key": "pathway",
+    "category_name": "通路与功能富集",
+    "description": "人工审核通路数据库，适合人类和模式生物通路富集与机制解释。",
+    "use_cases_json": [
+      "通路富集",
+      "机制解释",
+      "通路层级浏览"
+    ],
+    "data_types_json": [
+      "Pathway",
+      "Reaction",
+      "Gene Set"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Model Organisms"
+    ],
+    "tags_json": [
+      "Pathway",
+      "Curated",
+      "API"
+    ],
+    "url": "https://reactome.org/",
+    "download_url": null,
+    "api_url": "https://reactome.org/dev/content-service",
+    "region": "Global",
+    "rating": 5
+  },
+  {
+    "slug": "msigdb",
+    "name": "MSigDB",
+    "full_name": "Molecular Signatures Database",
+    "category_key": "pathway",
+    "category_name": "通路与功能富集",
+    "description": "常用基因集数据库，适合 GSEA、GSVA、通路打分和功能解释。",
+    "use_cases_json": [
+      "GSEA",
+      "GSVA",
+      "通路打分",
+      "基因集下载"
+    ],
+    "data_types_json": [
+      "Gene Set",
+      "Pathway"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse"
+    ],
+    "tags_json": [
+      "Gene Set",
+      "GSEA"
+    ],
+    "url": "https://www.gsea-msigdb.org/gsea/msigdb/",
+    "download_url": null,
+    "api_url": null,
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "string",
+    "name": "STRING",
+    "full_name": "STRING Protein Interaction Networks",
+    "category_key": "pathway",
+    "category_name": "通路与功能富集",
+    "description": "蛋白互作网络数据库，适合候选基因网络分析和 hub gene 解释。",
+    "use_cases_json": [
+      "蛋白互作",
+      "网络分析",
+      "hub gene 解释"
+    ],
+    "data_types_json": [
+      "PPI",
+      "Network"
+    ],
+    "species_json": [
+      "Human",
+      "Mouse",
+      "Plant",
+      "Microbe"
+    ],
+    "tags_json": [
+      "Network",
+      "Protein",
+      "API"
+    ],
+    "url": "https://string-db.org/",
+    "download_url": null,
+    "api_url": "https://string-db.org/help/api/",
+    "region": "Europe",
+    "rating": 5
+  },
+  {
+    "slug": "tair",
+    "name": "TAIR",
+    "full_name": "The Arabidopsis Information Resource",
+    "category_key": "model-organism",
+    "category_name": "模式生物与植物",
+    "description": "拟南芥核心数据库，适合植物基因功能、注释和突变体信息查询。",
+    "use_cases_json": [
+      "拟南芥基因",
+      "植物注释",
+      "突变体查询"
+    ],
+    "data_types_json": [
+      "Gene",
+      "Annotation",
+      "Mutant"
+    ],
+    "species_json": [
+      "Arabidopsis"
+    ],
+    "tags_json": [
+      "Plant",
+      "Model Organism"
+    ],
+    "url": "https://www.arabidopsis.org/",
+    "download_url": null,
+    "api_url": null,
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "gramene",
+    "name": "Gramene",
+    "full_name": "Gramene Plant Genomics",
+    "category_key": "model-organism",
+    "category_name": "模式生物与植物",
+    "description": "植物比较基因组数据库，适合作物基因组、同源基因和通路查询。",
+    "use_cases_json": [
+      "作物基因组",
+      "植物同源基因",
+      "比较基因组"
+    ],
+    "data_types_json": [
+      "Plant Genome",
+      "Gene",
+      "Pathway"
+    ],
+    "species_json": [
+      "Rice",
+      "Maize",
+      "Wheat",
+      "Plant"
+    ],
+    "tags_json": [
+      "Plant",
+      "Genome"
+    ],
+    "url": "https://www.gramene.org/",
+    "download_url": null,
+    "api_url": null,
+    "region": "USA",
+    "rating": 4
+  },
+  {
+    "slug": "mgi",
+    "name": "MGI",
+    "full_name": "Mouse Genome Informatics",
+    "category_key": "model-organism",
+    "category_name": "模式生物与植物",
+    "description": "小鼠基因组和功能注释核心数据库，适合小鼠基因、表型和模型查询。",
+    "use_cases_json": [
+      "小鼠基因",
+      "表型",
+      "疾病模型"
+    ],
+    "data_types_json": [
+      "Mouse Gene",
+      "Phenotype",
+      "Model"
+    ],
+    "species_json": [
+      "Mouse"
+    ],
+    "tags_json": [
+      "Mouse",
+      "Model Organism"
+    ],
+    "url": "https://www.informatics.jax.org/",
+    "download_url": null,
+    "api_url": null,
+    "region": "USA",
+    "rating": 5
+  },
+  {
+    "slug": "flybase",
+    "name": "FlyBase",
+    "full_name": "FlyBase",
+    "category_key": "model-organism",
+    "category_name": "模式生物与植物",
+    "description": "果蝇遗传和基因组数据库，适合果蝇基因、突变和表型查询。",
+    "use_cases_json": [
+      "果蝇基因",
+      "突变体",
+      "表型"
+    ],
+    "data_types_json": [
+      "Gene",
+      "Genetics",
+      "Phenotype"
+    ],
+    "species_json": [
+      "Drosophila"
+    ],
+    "tags_json": [
+      "Model Organism"
+    ],
+    "url": "https://flybase.org/",
+    "download_url": null,
+    "api_url": null,
+    "region": "Global",
+    "rating": 4
+  },
+  {
+    "slug": "wormbase",
+    "name": "WormBase",
+    "full_name": "WormBase",
+    "category_key": "model-organism",
+    "category_name": "模式生物与植物",
+    "description": "线虫基因组和遗传学数据库，适合 C. elegans 基因和功能查询。",
+    "use_cases_json": [
+      "线虫基因",
+      "功能注释",
+      "遗传学信息"
+    ],
+    "data_types_json": [
+      "Gene",
+      "Genome",
+      "Phenotype"
+    ],
+    "species_json": [
+      "C. elegans"
+    ],
+    "tags_json": [
+      "Model Organism"
+    ],
+    "url": "https://wormbase.org/",
+    "download_url": null,
+    "api_url": null,
+    "region": "Global",
+    "rating": 4
+  },
+  {
+    "slug": "zfin",
+    "name": "ZFIN",
+    "full_name": "Zebrafish Information Network",
+    "category_key": "model-organism",
+    "category_name": "模式生物与植物",
+    "description": "斑马鱼模型生物数据库，适合基因、表达、突变体和表型查询。",
+    "use_cases_json": [
+      "斑马鱼基因",
+      "表达模式",
+      "突变体"
+    ],
+    "data_types_json": [
+      "Gene",
+      "Expression",
+      "Phenotype"
+    ],
+    "species_json": [
+      "Zebrafish"
+    ],
+    "tags_json": [
+      "Model Organism"
+    ],
+    "url": "https://zfin.org/",
+    "download_url": null,
+    "api_url": null,
+    "region": "USA",
+    "rating": 4
+  },
+  {
+    "slug": "gtdb",
+    "name": "GTDB",
+    "full_name": "Genome Taxonomy Database",
+    "category_key": "microbiome",
+    "category_name": "微生物与宏基因组",
+    "description": "基于基因组的细菌和古菌分类数据库，适合宏基因组物种注释和系统发育。",
+    "use_cases_json": [
+      "微生物分类",
+      "宏基因组注释",
+      "系统发育"
+    ],
+    "data_types_json": [
+      "Microbial Genome",
+      "Taxonomy"
+    ],
+    "species_json": [
+      "Bacteria",
+      "Archaea"
+    ],
+    "tags_json": [
+      "Microbiome",
+      "Taxonomy"
+    ],
+    "url": "https://gtdb.ecogenomic.org/",
+    "download_url": null,
+    "api_url": null,
+    "region": "Australia",
+    "rating": 5
+  },
+  {
+    "slug": "silva",
+    "name": "SILVA",
+    "full_name": "SILVA rRNA Database",
+    "category_key": "microbiome",
+    "category_name": "微生物与宏基因组",
+    "description": "高质量 rRNA 序列数据库，常用于 16S/18S 扩增子分析的物种注释。",
+    "use_cases_json": [
+      "16S 注释",
+      "rRNA 分类",
+      "扩增子分析"
+    ],
+    "data_types_json": [
+      "rRNA",
+      "Taxonomy"
+    ],
+    "species_json": [
+      "Bacteria",
+      "Archaea",
+      "Eukaryotes"
+    ],
+    "tags_json": [
+      "16S",
+      "Microbiome"
+    ],
+    "url": "https://www.arb-silva.de/",
+    "download_url": null,
+    "api_url": null,
+    "region": "Europe",
+    "rating": 5
+  },
+  {
+    "slug": "mgnify",
+    "name": "MGnify",
+    "full_name": "EMBL-EBI MGnify",
+    "category_key": "microbiome",
+    "category_name": "微生物与宏基因组",
+    "description": "宏基因组数据分析和归档平台，适合查环境样本、微生物群落和功能注释。",
+    "use_cases_json": [
+      "宏基因组项目",
+      "环境微生物",
+      "功能注释"
+    ],
+    "data_types_json": [
+      "Metagenomics",
+      "Amplicon",
+      "Assembly"
+    ],
+    "species_json": [
+      "Microbiome"
+    ],
+    "tags_json": [
+      "Metagenomics",
+      "API"
+    ],
+    "url": "https://www.ebi.ac.uk/metagenomics/",
+    "download_url": null,
+    "api_url": "https://www.ebi.ac.uk/metagenomics/api/v1/",
+    "region": "Europe",
+    "rating": 5
+  },
+  {
+    "slug": "ncbi-taxonomy",
+    "name": "NCBI Taxonomy",
+    "full_name": "NCBI Taxonomy Database",
+    "category_key": "microbiome",
+    "category_name": "微生物与宏基因组",
+    "description": "NCBI 物种分类体系入口，适合查询 taxid、物种层级和分类名称标准化。",
+    "use_cases_json": [
+      "查 taxid",
+      "物种名称标准化",
+      "分类层级"
+    ],
+    "data_types_json": [
+      "Taxonomy",
+      "Species"
+    ],
+    "species_json": [
+      "All"
+    ],
+    "tags_json": [
+      "Taxonomy",
+      "Reference"
+    ],
+    "url": "https://www.ncbi.nlm.nih.gov/taxonomy",
+    "download_url": null,
+    "api_url": null,
+    "region": "USA",
+    "rating": 5
+  }
+]

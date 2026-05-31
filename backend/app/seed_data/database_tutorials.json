@@ -1,0 +1,114 @@
+[
+  {
+    "slug": "ensembl-gtf-download",
+    "resource_slug": "ensembl",
+    "title": "下载参考基因组与 GTF",
+    "scenario": "构建 STAR/HISAT2 索引或做 featureCounts 计数前，先统一 genome FASTA 与 GTF 注释版本。",
+    "steps_json": [
+      "进入 Ensembl FTP，选择物种目录和 release 版本。",
+      "从 fasta 目录下载 genome FASTA，从 gtf 目录下载对应 GTF。",
+      "记录 release 号，并在流程文档中固定该版本。"
+    ],
+    "example_query": "Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz + Homo_sapiens.GRCh38.*.gtf.gz",
+    "entry_url": "https://ftp.ensembl.org/pub/",
+    "content": "# 下载 Ensembl 参考基因组与 GTF\n\n## 适用场景\n当你要构建 STAR/HISAT2 索引、运行 featureCounts、做基因坐标注释或统一 RNA-seq 项目的参考版本时，需要同时下载同一 release 的 genome FASTA 和 GTF。\n\n## 准备目录\n```bash\nmkdir -p reference/ensembl_GRCh38\ncd reference/ensembl_GRCh38\n```\n\n## 操作步骤\n1. 进入 Ensembl FTP：`https://ftp.ensembl.org/pub/`。\n2. 选择固定 release，例如 `release-112`。\n3. 在 `fasta/homo_sapiens/dna/` 下载 primary assembly FASTA。\n4. 在 `gtf/homo_sapiens/` 下载同一 release 的 GTF。\n5. 解压后记录 release、物种、assembly 名称。\n\n## 示例命令\n```bash\nwget https://ftp.ensembl.org/pub/release-112/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz\nwget https://ftp.ensembl.org/pub/release-112/gtf/homo_sapiens/Homo_sapiens.GRCh38.112.gtf.gz\n\ngunzip *.gz\n```\n\n## 结果检查\n```bash\ngrep -c '^>' Homo_sapiens.GRCh38.dna.primary_assembly.fa\nhead Homo_sapiens.GRCh38.112.gtf\n```\n\n## 常见问题\n| 问题 | 原因 | 解决 |\n| --- | --- | --- |\n| STAR 建索引后 featureCounts 计数很低 | FASTA 和 GTF 版本不一致 | 使用同一 Ensembl release |\n| 染色体命名不一致 | `1` 与 `chr1` 混用 | 全流程统一 Ensembl 或 UCSC 命名 |\n| 下载文件太多 | 选错目录 | FASTA 只选 primary_assembly 或 toplevel 之一 |\n"
+  },
+  {
+    "slug": "ensembl-biomart-id-conversion",
+    "resource_slug": "ensembl",
+    "title": "用 BioMart 做 ID 转换",
+    "scenario": "把 Ensembl gene ID 转换为 gene symbol、Entrez ID 或描述信息。",
+    "steps_json": [
+      "进入 Ensembl BioMart，选择 Ensembl Genes 数据集。",
+      "选择目标物种，并上传或粘贴 gene ID 列表。",
+      "在 Attributes 中勾选 Gene stable ID、Gene name 和 Description 后导出。"
+    ],
+    "example_query": "ENSG00000141510 -> TP53",
+    "entry_url": "https://www.ensembl.org/biomart/martview",
+    "content": "# 用 Ensembl BioMart 做 ID 转换\n\n## 适用场景\n当你的表达矩阵是 Ensembl gene ID，但下游富集、作图或报告需要 gene symbol、Entrez ID、描述信息时，可以用 BioMart 批量转换。\n\n## 操作步骤\n1. 打开 Ensembl BioMart。\n2. Database 选择 `Ensembl Genes`。\n3. Dataset 选择目标物种，例如 `Human genes`。\n4. Filters 中选择 `Gene stable ID(s)`，粘贴基因 ID。\n5. Attributes 中选择 `Gene stable ID`、`Gene name`、`NCBI gene ID`、`Gene description`。\n6. 导出 TSV 文件并与表达矩阵合并。\n\n## 示例输入\n```text\nENSG00000141510\nENSG00000157764\nENSG00000012048\n```\n\n## R 合并示例\n```r\nexpr <- read.csv(\"deg_results.csv\")\nanno <- read.delim(\"ensembl_biomart.tsv\")\nmerged <- merge(expr, anno, by.x = \"gene_id\", by.y = \"Gene.stable.ID\", all.x = TRUE)\nwrite.csv(merged, \"deg_results_annotated.csv\", row.names = FALSE)\n```\n\n## 注意事项\n- ID 转换必须匹配物种。\n- Ensembl ID 带版本号时，如 `ENSG00000141510.18`，通常需要先去掉 `.18`。\n- 多对一映射需要保留原始 ID，避免误合并。\n"
+  },
+  {
+    "slug": "sra-fastq-download",
+    "resource_slug": "sra",
+    "title": "从 SRR 编号下载 FASTQ",
+    "scenario": "复现论文测序数据，或把公开 reads 接入自己的 RNA-seq / WGS 流程。",
+    "steps_json": [
+      "在 SRA 页面检索 BioProject、GSE 或 SRR 编号。",
+      "记录 SRR run accession，并使用 SRA Toolkit 下载。",
+      "用 fasterq-dump 转换 FASTQ，再用 gzip 压缩并进入质控流程。"
+    ],
+    "example_query": "fasterq-dump SRRxxxxxxx --split-files -e 8",
+    "entry_url": "https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software",
+    "content": "# 从 SRA 的 SRR 编号下载 FASTQ\n\n## 适用场景\n当论文或 GEO 页面只给出 SRR 编号时，可以用 SRA Toolkit 下载原始 reads，再接入 RNA-seq、WGS、BSA 或单细胞流程。\n\n## 安装工具\n```bash\nmamba create -n sra-tools -c bioconda -c conda-forge sra-tools pigz\nconda activate sra-tools\nfasterq-dump --version\n```\n\n## 推荐目录\n```text\npublic_data_project/\n├── 00_sra/\n├── 01_fastq/\n├── 02_logs/\n└── metadata/\n```\n\n## 单个样本下载\n```bash\nmkdir -p 00_sra 01_fastq\n\nprefetch SRRxxxxxxx --output-directory 00_sra\nfasterq-dump 00_sra/SRRxxxxxxx/SRRxxxxxxx.sra \\\n  --split-files \\\n  -e 8 \\\n  -O 01_fastq\n\npigz -p 8 01_fastq/SRRxxxxxxx_*.fastq\n```\n\n## 批量下载模板\n```bash\ncat metadata/srr_list.txt | while read srr\ndo\n  prefetch \"$srr\" --output-directory 00_sra\n  fasterq-dump \"00_sra/$srr/$srr.sra\" --split-files -e 8 -O 01_fastq\ndone\n\npigz -p 8 01_fastq/*.fastq\n```\n\n## 结果检查\n```bash\nls -lh 01_fastq\nfastqc 01_fastq/*.fastq.gz -o 02_logs\n```\n\n## 常见问题\n| 问题 | 原因 | 解决 |\n| --- | --- | --- |\n| 下载速度慢 | NCBI 网络距离或限速 | 优先尝试 ENA fastq_ftp |\n| 磁盘爆满 | fasterq-dump 会产生临时文件 | 预留 FASTQ 体积 2-3 倍空间 |\n| 单端/双端混乱 | 未检查 RunInfo | 先导出 RunInfo，确认 Layout |\n"
+  },
+  {
+    "slug": "ena-fastq-ftp",
+    "resource_slug": "ena",
+    "title": "通过 ENA 获取 FASTQ 直链",
+    "scenario": "批量下载公开测序数据时，ENA 通常能直接提供 fastq_ftp 字段。",
+    "steps_json": [
+      "进入 ENA Browser，输入 SRR/ERR/DRR 或 BioProject 编号。",
+      "在 Run 信息中查看 FASTQ FTP 链接。",
+      "使用 wget、aria2c 或脚本批量下载 fastq_ftp 文件。"
+    ],
+    "example_query": "fields=run_accession,fastq_ftp,fastq_md5",
+    "entry_url": "https://www.ebi.ac.uk/ena/portal/api/",
+    "content": "# 通过 ENA 获取 FASTQ 直链\n\n## 适用场景\n当你已经知道 SRR/ERR/DRR 编号，想用 wget 或 aria2c 直接下载 FASTQ 时，ENA 的 `fastq_ftp` 字段很方便。\n\n## 查询单个 Run\n```bash\nwget -O ena_run.tsv \"https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRRxxxxxxx&result=read_run&fields=run_accession,fastq_ftp,fastq_md5&format=tsv\"\ncat ena_run.tsv\n```\n\n## 批量下载 FASTQ\n```bash\ncut -f2 ena_run.tsv | tail -n +2 | tr ';' '\\n' | while read url\ndo\n  wget -c \"ftp://$url\"\ndone\n```\n\n## 推荐字段\n| 字段 | 说明 |\n| --- | --- |\n| `run_accession` | SRR/ERR/DRR 编号 |\n| `sample_accession` | 样本编号 |\n| `fastq_ftp` | FASTQ FTP 下载链接 |\n| `fastq_md5` | 文件校验值 |\n| `library_layout` | SINGLE 或 PAIRED |\n\n## 常见问题\n- `fastq_ftp` 为空：部分数据未开放 FASTQ 直链，可退回 SRA Toolkit。\n- 一个 run 有两个链接：通常表示双端测序 R1/R2。\n- 下载后建议用 md5 校验文件完整性。\n"
+  },
+  {
+    "slug": "geo-expression-matrix",
+    "resource_slug": "geo",
+    "title": "下载 GEO 表达矩阵",
+    "scenario": "快速获取论文已整理好的表达矩阵，用于差异分析、WGCNA 或验证候选基因。",
+    "steps_json": [
+      "用 GSE 编号进入 GEO Series 页面。",
+      "查看 Supplementary files 是否包含表达矩阵或 count matrix。",
+      "下载 matrix 后检查样本分组、探针注释和基因 ID 类型。"
+    ],
+    "example_query": "GSE + expression matrix + sample metadata",
+    "entry_url": "https://www.ncbi.nlm.nih.gov/geo/",
+    "content": "# 下载 GEO 表达矩阵\n\n## 适用场景\n当你想快速复用公开表达数据做差异分析、WGCNA、免疫浸润或候选基因验证时，优先查看 GEO 是否提供整理好的表达矩阵。\n\n## 操作步骤\n1. 打开 GEO，输入 GSE 编号。\n2. 在 Series 页面查看实验设计、样本分组和平台信息。\n3. 找到 Supplementary files，下载 count matrix、TPM matrix 或 normalized matrix。\n4. 下载 sample metadata，整理 group、batch、treatment 等字段。\n5. 检查表达矩阵是 raw counts、TPM 还是芯片 normalized intensity。\n\n## R 读取示例\n```r\nexpr <- read.delim(\"GSE_expression_matrix.tsv\", row.names = 1, check.names = FALSE)\nmeta <- read.delim(\"GSE_sample_metadata.tsv\")\n\ndim(expr)\nhead(meta)\n```\n\n## 判断能否用于 DESeq2\n| 数据类型 | 能否直接用于 DESeq2 |\n| --- | --- |\n| raw counts | 可以 |\n| TPM/FPKM | 不建议 |\n| normalized microarray | 不可以，用 limma |\n\n## 常见问题\n- GEO 矩阵列名与样本表不一致时，先建立 GSM 到 sample name 的映射。\n- 芯片数据需要探针注释，不要直接把 probe ID 当 gene symbol。\n- 如果只有 SRA 链接，没有矩阵，需要走 SRA/ENA 下载 FASTQ 重新分析。\n"
+  },
+  {
+    "slug": "geo-to-sra-run-selector",
+    "resource_slug": "geo",
+    "title": "从 GEO 追踪到 SRA 原始数据",
+    "scenario": "当 GEO 只提供样本信息时，需要跳转 SRA 下载 FASTQ 重新分析。",
+    "steps_json": [
+      "在 GEO 样本页面查找 SRA Run Selector 链接。",
+      "导出 RunInfo 表，获得 SRR 编号和样本对应关系。",
+      "按样本分组整理 metadata，再进入 SRA/ENA 下载。"
+    ],
+    "example_query": "GSE accession -> SRA Run Selector -> SRR list",
+    "entry_url": "https://www.ncbi.nlm.nih.gov/Traces/study/",
+    "content": "# 从 GEO 追踪到 SRA 原始数据\n\n## 适用场景\nGEO 页面没有可直接使用的表达矩阵，或者你希望统一用自己的流程重新分析公开 RNA-seq、WGS、CUT&Tag 数据。\n\n## 操作步骤\n1. 进入 GEO Series 页面，找到 SRA Run Selector 链接。\n2. 在 Run Selector 中下载 `RunInfo.csv`。\n3. 提取 `Run`、`SampleName`、`LibraryLayout`、`Platform` 等字段。\n4. 根据 SRR 编号用 SRA Toolkit 或 ENA 下载 FASTQ。\n5. 建立 `metadata.tsv`，记录样本分组和 SRR 对应关系。\n\n## 元数据整理示例\n```r\nruninfo <- read.csv(\"SraRunInfo.csv\")\nmetadata <- runinfo[, c(\"Run\", \"SampleName\", \"LibraryLayout\", \"Platform\")]\nwrite.table(metadata, \"metadata.tsv\", sep = \"\\t\", row.names = FALSE, quote = FALSE)\n```\n\n## 下载衔接\n```bash\ncut -f1 metadata/srr_list.txt | while read srr\ndo\n  fasterq-dump \"$srr\" --split-files -e 8 -O fastq\ndone\n```\n\n## 注意事项\n- 一个 GSM 可能对应多个 SRR，需要合并同一样本的多个 lane。\n- 先检查 LibraryLayout，避免单端数据误按双端流程跑。\n- 公开数据再分析必须记录原始 accession，方便结果追溯。\n"
+  },
+  {
+    "slug": "gdc-tcga-expression",
+    "resource_slug": "gdc",
+    "title": "下载 TCGA 表达矩阵",
+    "scenario": "做肿瘤差异表达、生存分析或免疫浸润分析前，获取 TCGA RNA-seq 数据。",
+    "steps_json": [
+      "进入 GDC Portal，选择 Program = TCGA 和目标癌种项目。",
+      "在 Data Category 中选择 Transcriptome Profiling。",
+      "选择 HTSeq Counts 或 STAR Counts 后加入 Cart，并下载 manifest。"
+    ],
+    "example_query": "TCGA-LUAD + Transcriptome Profiling + STAR Counts",
+    "entry_url": "https://portal.gdc.cancer.gov/repository",
+    "content": "# 下载 TCGA 表达矩阵\n\n## 适用场景\n当你要做肿瘤差异表达、生存分析、分型比较、免疫浸润或候选基因验证时，可以从 GDC 下载 TCGA RNA-seq 数据。\n\n## Portal 操作步骤\n1. 打开 GDC Repository。\n2. Program 选择 `TCGA`。\n3. Project 选择癌种，例如 `TCGA-LUAD`。\n4. Data Category 选择 `Transcriptome Profiling`。\n5. Data Type 选择 `Gene Expression Quantification`。\n6. Workflow Type 选择 `STAR - Counts`。\n7. Add to Cart，下载 Manifest。\n\n## GDC Client 下载\n```bash\ngdc-client download -m gdc_manifest.txt -d gdc_download\n```\n\n## 下游整理思路\n1. 合并每个样本的 gene count 文件。\n2. 区分 primary tumor 和 solid tissue normal。\n3. 用 DESeq2 或 edgeR 做差异分析。\n4. 结合临床表做生存或分期关联。\n\n## 注意事项\n- TCGA barcode 前 12 位代表 patient，前 16 位区分样本类型。\n- Tumor/Normal 比较必须检查样本类型代码。\n- 不同 GDC workflow 版本不要混用。\n"
+  },
+  {
+    "slug": "gdc-tcga-maf-clinical",
+    "resource_slug": "gdc",
+    "title": "获取突变 MAF 与临床信息",
+    "scenario": "分析癌症突变谱、驱动基因或突变与生存/分型的关系。",
+    "steps_json": [
+      "在 Repository 里选择 Simple Nucleotide Variation。",
+      "下载 Masked Somatic Mutation MAF 文件。",
+      "同步下载 Clinical Supplement 或通过 GDC API 获取病例信息。"
+    ],
+    "example_query": "TCGA-BRCA + Masked Somatic Mutation + Clinical",
+    "entry_url": "https://portal.gdc.cancer.gov/repository",
+    "content": "# 获取 TCGA 突变 MAF 与临床信息\n\n## 适用场景\n用于分析癌症突变谱、驱动基因、TMB、突变与表达/生存/分型之间的关系。\n\n## MAF 下载步骤\n1. 打开 GDC Repository。\n2. Program 选择 `TCGA`，Project 选择目标癌种。\n3. Data Category 选择 `Simple Nucleotide Variation`。\n4. Data Type 选择 `Masked Somatic Mutation`。\n5. 下载 MAF 文件和 manifest。\n\n## 临床信息\n可以在 GDC Portal 的 Clinical 或 Case 页面下载，也可以通过 API 获取病例、生存、分期等字段。\n\n## R 读取示例\n```r\nlibrary(data.table)\nmaf <- fread(\"tcga.maf.gz\", skip = \"Hugo_Symbol\")\ntable(maf$Variant_Classification)\n```\n\n## 常见分析\n- 高频突变基因统计。\n- TMB 计算。\n- 突变型 vs 野生型表达差异。\n- 突变状态与总生存期关联。\n\n## 注意事项\n- MAF 中样本 barcode 要和表达矩阵 barcode 统一截取规则。\n- 临床字段缺失较常见，需要做缺失值统计。\n- TMB 计算要明确外显子区域大小和过滤规则。\n"
+  }
+]

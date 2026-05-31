@@ -1,7 +1,13 @@
 from sqlalchemy import text
 
 from app.core.database import Base, SessionLocal, engine
-from app.seed_data import seed_algorithms, seed_literatures, seed_pipelines
+from app.seed_data import (
+    seed_algorithms,
+    seed_databases,
+    seed_database_tutorials,
+    seed_literatures,
+    seed_pipelines,
+)
 
 
 def init_db() -> None:
@@ -48,10 +54,15 @@ def init_db() -> None:
         seed_pipelines(db)
         seed_algorithms(db)
         seed_literatures(db)
+        seed_databases(db)
+        seed_database_tutorials(db)
     finally:
         db.close()
 
 
 if __name__ == "__main__":
     init_db()
-    print("Database initialized with mock pipeline, algorithm and literature data.")
+    print(
+        "Database initialized with pipeline, algorithm, literature, "
+        "database and tutorial data."
+    )
