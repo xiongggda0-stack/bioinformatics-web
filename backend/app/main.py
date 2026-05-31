@@ -8,7 +8,14 @@ from app.api.v1.controllers.pipeline_controller import router as pipeline_router
 from app.core.config import settings
 from app.core.database import Base, engine
 from app.core.exceptions import register_exception_handlers
-from app.models import algorithm, literature, pipeline, user
+from app.models import (
+    algorithm,
+    database_resource,
+    database_tutorial,
+    literature,
+    pipeline,
+    user,
+)
 
 
 def create_app() -> FastAPI:
