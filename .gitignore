@@ -7,3 +7,4 @@ venv/
 .next/
 node_modules/
 postgres_data/
+.worktrees/
