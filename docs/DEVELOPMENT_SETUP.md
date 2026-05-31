@@ -51,6 +51,14 @@ docker compose exec backend python -m py_compile init_db.py
 docker compose exec frontend npx tsc --noEmit --pretty false
 ```
 
+公开内容安全扫描：
+
+```powershell
+docker-compose exec -T backend python scripts/scan_public_content.py
+```
+
+新增或导入公开内容后必须执行安全扫描。禁止提交真实用户名、密码、Token、邮箱和本机绝对路径。示例中的敏感值应使用 `<YOUR_USERNAME>`、`<YOUR_PASSWORD>`、`<YOUR_OSS_RAW_DATA_URI>`、`<YOUR_PROJECT_DIR>` 或 `${VAR}` 形式的占位符。
+
 后端测试：
 
 ```powershell
