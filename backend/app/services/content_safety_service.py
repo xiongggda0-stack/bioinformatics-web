@@ -12,7 +12,7 @@ _RULE_PATTERNS = {
         re.IGNORECASE,
     ),
     "token": re.compile(
-        rf"\b(?:api[_-]?token|access[_-]?token|auth[_-]?token|bearer[_-]?token|secret[_-]?token)"
+        rf"\b(?:token|api[_-]?token|access[_-]?token|auth[_-]?token|bearer[_-]?token|secret[_-]?token)"
         rf"\b\s*(?:=|:)\s*[\"']?(?!{_PLACEHOLDER})[A-Za-z0-9][A-Za-z0-9._~+/=-]{{7,}}",
         re.IGNORECASE,
     ),
@@ -23,7 +23,7 @@ _RULE_PATTERNS = {
         r"(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+",
     ),
     "windows-absolute-path": re.compile(
-        r"\b[A-Z]:\\(?:[^\\\s\"'`]+\\?)+",
+        r"\b[A-Z]:[\\/](?:[^\\/\s\"'`]+[\\/]?)+",
         re.IGNORECASE,
     ),
     "private-locator": re.compile(

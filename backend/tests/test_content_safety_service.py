@@ -33,8 +33,11 @@ def test_login_placeholders_are_not_reported() -> None:
     ("text", "expected_rule"),
     [
         ('api_token = "live-token-value-123456"', "token"),
+        ("token = realtoken123", "token"),
+        ("TOKEN: realtoken123", "token"),
         ("Contact maintainer@example.edu before publishing.", "email"),
         (r'workdir = "C:\Users\alice\private-project"', "windows-absolute-path"),
+        ('workdir = "D:/private/project"', "windows-absolute-path"),
     ],
 )
 def test_supported_sensitive_value_rules_are_reported(
@@ -55,6 +58,18 @@ def test_supported_sensitive_value_rules_are_reported(
 )
 def test_email_rule_ignores_r_slot_syntax_and_example_domains(text: str) -> None:
     assert "email" not in rule_names(text)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "token = <YOUR_TOKEN>",
+        "TOKEN: ${API_TOKEN}",
+        "The tutorial explains how a token is used for authentication.",
+    ],
+)
+def test_token_rule_ignores_placeholders_and_tutorial_prose(text: str) -> None:
+    assert "token" not in rule_names(text)
 
 
 @pytest.mark.parametrize(
