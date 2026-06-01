@@ -56,6 +56,8 @@ def test_login_real_username_is_reported_when_password_is_placeholder() -> None:
         ('api_key = "real-api-key-123456"', "token"),
         ('secret = "real-secret-123456"', "token"),
         ("Authorization: Bearer realtoken123", "token"),
+        ('{"Authorization": "Bearer realtoken123"}', "token"),
+        ("bearer = realtoken123", "token"),
         ("Contact maintainer@example.edu before publishing.", "email"),
         ("Contact maintainer@meta.data before publishing.", "email"),
         (r'workdir = "C:\Users\alice\private-project"', "windows-absolute-path"),
@@ -90,6 +92,8 @@ def test_email_rule_ignores_r_slot_syntax_and_example_domains(text: str) -> None
         "api_key = <YOUR_TOKEN>",
         "secret = ${TOKEN}",
         "Authorization: Bearer <YOUR_TOKEN>",
+        '{"Authorization": "Bearer ${API_TOKEN}"}',
+        "bearer = <YOUR_TOKEN>",
         "The tutorial explains how a token is used for authentication.",
     ],
 )
@@ -111,6 +115,10 @@ def test_token_rule_ignores_placeholders_and_tutorial_prose(text: str) -> None:
         "cache.service.local",
         "/scratch/alice/private-project/results",
         "/data/alice/private-project/results",
+        "/gpfs/users/alice/private-project/results",
+        "http://compute01:8080/private/api",
+        "hdfs://compute01/user/alice/private-project",
+        "s3://real-bucket/tutorial/input.fastq.gz",
     ],
 )
 def test_private_locators_are_reported(text: str) -> None:
@@ -126,7 +134,11 @@ def test_private_locators_are_reported(text: str) -> None:
         "${PROJECT_DIR}",
         "/scratch/${USER}/private-project",
         "/data/<YOUR_USERNAME>/private-project",
+        "/gpfs/users/${USER}/private-project",
         "http://localhost:8000/api/health",
+        "https://example.com/tutorial/input.fastq.gz",
+        "s3://${BUCKET}/tutorial/input.fastq.gz",
+        "s3://<YOUR_BUCKET>/tutorial/input.fastq.gz",
     ],
 )
 def test_private_locator_placeholders_are_not_reported(text: str) -> None:
@@ -188,6 +200,19 @@ def test_finding_excerpt_redacts_sensitive_value_and_is_length_limited() -> None
     assert secret not in findings[0].excerpt
     assert "[REDACTED]" in findings[0].excerpt
     assert len(findings[0].excerpt) <= 160
+
+
+def test_private_locator_excerpt_is_redacted_and_length_limited() -> None:
+    locator = "hdfs://compute01/user/alice/private-project"
+    findings = scan_text(
+        f"private source: {locator} " + ("x" * 300),
+        source_path="sample.md",
+    )
+
+    assert findings
+    assert all(locator not in finding.excerpt for finding in findings)
+    assert all("[REDACTED]" in finding.excerpt for finding in findings)
+    assert all(len(finding.excerpt) <= 160 for finding in findings)
 
 
 def test_finding_excerpt_redacts_overlapping_sensitive_values() -> None:
