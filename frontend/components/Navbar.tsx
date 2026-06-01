@@ -31,7 +31,7 @@ export default function Navbar(): JSX.Element {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
-      <nav className="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-3 lg:h-16 lg:flex-row lg:items-center lg:justify-between lg:py-0">
+      <nav className="mx-auto flex w-full min-w-0 max-w-7xl flex-col gap-3 px-6 py-3 lg:h-16 lg:flex-row lg:items-center lg:justify-between lg:py-0">
         <div className="flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded bg-teal text-sm font-bold text-white shadow-sm">
@@ -63,12 +63,12 @@ export default function Navbar(): JSX.Element {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 lg:flex-1 lg:flex-row lg:items-center lg:justify-end">
-          <div className="lg:max-w-sm xl:max-w-md">
+        <div className="flex min-w-0 flex-col gap-3 lg:flex-1 lg:flex-row lg:items-center lg:justify-end">
+          <div className="min-w-0 lg:max-w-sm xl:max-w-md">
             <GlobalSearch />
           </div>
 
-          <div className="flex items-center gap-1 overflow-x-auto 2xl:hidden">
+          <div className="flex w-full min-w-0 items-center gap-1 overflow-x-auto 2xl:hidden">
             {navItems.map((item) => {
               const active = isActivePath(pathname, item.href);
 

@@ -57,6 +57,9 @@ export default function LearningPathsPage(): JSX.Element {
                         {index + 1}
                       </span>
                       <span className="min-w-0">
+                        <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-coral">
+                          {step.resourceType}
+                        </span>
                         <span className="block text-sm font-semibold text-ink transition group-hover:text-teal">
                           {step.title}
                         </span>

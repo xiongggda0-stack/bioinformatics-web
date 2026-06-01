@@ -2,6 +2,7 @@ export interface LearningPathStep {
   title: string;
   description: string;
   href: string;
+  resourceType: string;
 }
 
 export interface LearningPath {
@@ -23,22 +24,26 @@ export const learningPaths: LearningPath[] = [
       {
         title: "找到标准差异表达流程",
         description: "先理解 FASTQ、比对或准比对、计数矩阵与差异表达之间的关系。",
-        href: "/pipelines?keyword=RNA-seq"
+        href: "/pipelines?keyword=RNA-seq",
+        resourceType: "Pipeline"
       },
       {
         title: "检索关键工具与参数",
         description: "围绕 STAR、Salmon、featureCounts 和 DESeq2 查找工具说明。",
-        href: "/search?q=DESeq2"
+        href: "/search?q=DESeq2",
+        resourceType: "Software"
       },
       {
         title: "补充公共数据练习素材",
         description: "从 GEO、SRA 等数据库找到可复用的表达数据和原始测序数据。",
-        href: "/databases?keyword=RNA-seq"
+        href: "/databases?keyword=RNA-seq",
+        resourceType: "Database"
       },
       {
         title: "回到文献理解结果边界",
         description: "通过方法论文和关联文献确认统计假设、解释范围与报告方式。",
-        href: "/literatures"
+        href: "/literatures",
+        resourceType: "Literature"
       }
     ]
   },
@@ -52,22 +57,26 @@ export const learningPaths: LearningPath[] = [
       {
         title: "定位单细胞综合流程",
         description: "了解 Cell Ranger、表达矩阵、质控、整合、聚类和注释的先后关系。",
-        href: "/pipelines?keyword=单细胞"
+        href: "/pipelines?keyword=单细胞",
+        resourceType: "Pipeline"
       },
       {
         title: "检索 Seurat 与 Cell Ranger",
         description: "查看预处理和下游分析工具的输入输出、参数和适用边界。",
-        href: "/search?q=Seurat"
+        href: "/search?q=Seurat",
+        resourceType: "Software"
       },
       {
         title: "查找公开单细胞数据",
         description: "使用单细胞数据库与公共存储库练习数据检索和复用。",
-        href: "/databases?keyword=单细胞"
+        href: "/databases?keyword=单细胞",
+        resourceType: "Database"
       },
       {
         title: "延伸到高级下游",
         description: "在基础分析稳定后，再进入拟时序、细胞通讯和 RNA velocity。",
-        href: "/pipelines?keyword=RNA%20velocity"
+        href: "/pipelines?keyword=RNA%20velocity",
+        resourceType: "Pipeline"
       }
     ]
   },
@@ -81,17 +90,20 @@ export const learningPaths: LearningPath[] = [
       {
         title: "从数据库导航开始",
         description: "按组学类型和数据对象选择 GEO、SRA、TCGA 等合适入口。",
-        href: "/databases"
+        href: "/databases",
+        resourceType: "Database"
       },
       {
         title: "检索下载与复用教程",
         description: "通过全站检索找到数据库教程、示例查询和常见数据格式说明。",
-        href: "/search?q=数据下载"
+        href: "/search?q=数据下载",
+        resourceType: "Tutorial"
       },
       {
         title: "匹配可复用分析流程",
         description: "根据 FASTQ、表达矩阵或临床数据等输入类型选择后续流程。",
-        href: "/pipelines"
+        href: "/pipelines",
+        resourceType: "Pipeline"
       }
     ]
   },
@@ -105,22 +117,26 @@ export const learningPaths: LearningPath[] = [
       {
         title: "从研究问题选择流程",
         description: "先明确输入、关键步骤、输出结果和需要回答的生物学问题。",
-        href: "/pipelines"
+        href: "/pipelines",
+        resourceType: "Pipeline"
       },
       {
         title: "检索工具和数据库来源",
         description: "用全站检索补齐软件参数、数据库入口和使用教程。",
-        href: "/search"
+        href: "/search",
+        resourceType: "Search"
       },
       {
         title: "关联方法论文",
         description: "回到文献集核对经典方法论文和相关研究证据。",
-        href: "/literatures"
+        href: "/literatures",
+        resourceType: "Literature"
       },
       {
         title: "补充可复用数据入口",
         description: "记录公开数据来源，让流程文档可以复查、复现和继续扩展。",
-        href: "/databases"
+        href: "/databases",
+        resourceType: "Database"
       }
     ]
   }
