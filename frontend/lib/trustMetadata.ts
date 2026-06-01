@@ -15,6 +15,10 @@ export interface TrustMetadata {
   disclaimer?: string;
 }
 
+export function hasTrustValue(value?: string | null): value is string {
+  return Boolean(value?.trim());
+}
+
 export function getTrustValue(value?: string | null): string {
   return value?.trim() ? value : "待补充";
 }

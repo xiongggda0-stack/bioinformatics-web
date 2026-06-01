@@ -31,7 +31,6 @@ interface Pipeline {
 }
 
 interface PipelineMetadata extends TrustMetadata {
-  difficulty?: string;
   tools?: string[];
   inputs?: string[];
   outputs?: string[];

@@ -1,6 +1,10 @@
 import { DetailSectionCard } from "@/components/DetailPageShell";
 import type { TrustMetadata } from "@/lib/trustMetadata";
-import { getTrustList, getTrustValue } from "@/lib/trustMetadata";
+import {
+  getTrustList,
+  getTrustValue,
+  hasTrustValue
+} from "@/lib/trustMetadata";
 
 interface TrustPanelProps {
   metadata: TrustMetadata;
@@ -26,13 +30,25 @@ export default function TrustPanel({
   metadata,
   officialLinkLabel = "查看官方文档"
 }: TrustPanelProps): JSX.Element {
+  const hasVersion = hasTrustValue(metadata.version);
+  const installation = hasTrustValue(metadata.installation)
+    ? metadata.installation
+    : null;
+  const officialDocsUrl = hasTrustValue(metadata.official_docs_url)
+    ? metadata.official_docs_url
+    : null;
+
   return (
     <DetailSectionCard
       eyebrow="Public Trust"
       title="公开使用说明"
       description="快速查看资料校验、适用范围与使用边界。"
     >
-      <dl className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      <dl
+        className={`grid gap-5 sm:grid-cols-2 ${
+          hasVersion ? "xl:grid-cols-4" : "xl:grid-cols-3"
+        }`}
+      >
         <div>
           <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
             校验状态
@@ -57,7 +73,7 @@ export default function TrustPanel({
             {getTrustValue(metadata.difficulty)}
           </dd>
         </div>
-        {metadata.version ? (
+        {hasVersion ? (
           <div>
             <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
               版本
@@ -90,21 +106,21 @@ export default function TrustPanel({
         </div>
       </div>
 
-      {metadata.installation ? (
+      {installation ? (
         <div className="mt-5 border-t border-slate-100 pt-5">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
             安装建议
           </p>
           <p className="mt-2 text-sm leading-6 text-slate-700">
-            {metadata.installation}
+            {installation}
           </p>
         </div>
       ) : null}
 
       <div className="mt-5 border-t border-slate-100 pt-5">
-        {metadata.official_docs_url ? (
+        {officialDocsUrl ? (
           <a
-            href={metadata.official_docs_url}
+            href={officialDocsUrl}
             target="_blank"
             rel="noreferrer"
             className="inline-flex text-sm font-semibold text-teal transition hover:text-emerald-700"
@@ -114,7 +130,7 @@ export default function TrustPanel({
         ) : null}
         <p
           className={`text-xs leading-5 text-slate-600 ${
-            metadata.official_docs_url ? "mt-4" : ""
+            officialDocsUrl ? "mt-4" : ""
           }`}
         >
           {getTrustValue(metadata.disclaimer)}
