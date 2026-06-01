@@ -30,12 +30,34 @@ def test_login_placeholders_are_not_reported() -> None:
 
 
 @pytest.mark.parametrize(
+    "password",
+    ['"secret123"', "'secret123'"],
+)
+def test_quoted_login_passwords_are_reported(password: str) -> None:
+    assert "login-password" in rule_names(f"./lnd login -u private-user -p {password}")
+
+
+def test_password_assignment_is_reported() -> None:
+    assert "login-password" in rule_names('password = "secret123"')
+
+
+def test_login_real_username_is_reported_when_password_is_placeholder() -> None:
+    assert "login-password" in rule_names(
+        "./lnd login -u private-user -p <YOUR_PASSWORD>"
+    )
+
+
+@pytest.mark.parametrize(
     ("text", "expected_rule"),
     [
         ('api_token = "live-token-value-123456"', "token"),
         ("token = realtoken123", "token"),
         ("TOKEN: realtoken123", "token"),
+        ('api_key = "real-api-key-123456"', "token"),
+        ('secret = "real-secret-123456"', "token"),
+        ("Authorization: Bearer realtoken123", "token"),
         ("Contact maintainer@example.edu before publishing.", "email"),
+        ("Contact maintainer@meta.data before publishing.", "email"),
         (r'workdir = "C:\Users\alice\private-project"', "windows-absolute-path"),
         ('workdir = "D:/private/project"', "windows-absolute-path"),
     ],
@@ -65,6 +87,9 @@ def test_email_rule_ignores_r_slot_syntax_and_example_domains(text: str) -> None
     [
         "token = <YOUR_TOKEN>",
         "TOKEN: ${API_TOKEN}",
+        "api_key = <YOUR_TOKEN>",
+        "secret = ${TOKEN}",
+        "Authorization: Bearer <YOUR_TOKEN>",
         "The tutorial explains how a token is used for authentication.",
     ],
 )
@@ -79,6 +104,13 @@ def test_token_rule_ignores_placeholders_and_tutorial_prose(text: str) -> None:
         "/public/home/yhpeng/cut_tag/results",
         "/home/alice/private-project/results",
         "/Users/alice/private-project/results",
+        "http://10.23.45.67:8080/private/api",
+        "192.168.10.42",
+        "172.16.1.5",
+        "https://compute.cluster.internal/jobs",
+        "cache.service.local",
+        "/scratch/alice/private-project/results",
+        "/data/alice/private-project/results",
     ],
 )
 def test_private_locators_are_reported(text: str) -> None:
@@ -92,9 +124,23 @@ def test_private_locators_are_reported(text: str) -> None:
         "<YOUR_PROJECT_DIR>",
         "${OSS_RAW_DATA_URI}",
         "${PROJECT_DIR}",
+        "/scratch/${USER}/private-project",
+        "/data/<YOUR_USERNAME>/private-project",
+        "http://localhost:8000/api/health",
     ],
 )
 def test_private_locator_placeholders_are_not_reported(text: str) -> None:
+    assert "private-locator" not in rule_names(text)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "/data/fastq/sampleA",
+        "/data/image/tissue_hires_image.tif",
+    ],
+)
+def test_private_locator_ignores_common_data_directories(text: str) -> None:
     assert "private-locator" not in rule_names(text)
 
 
@@ -131,6 +177,42 @@ def test_scan_public_content_tolerates_non_utf8_bytes(tmp_path: Path) -> None:
     assert [finding.rule_name for finding in findings] == ["login-password"]
 
 
+def test_finding_excerpt_redacts_sensitive_value_and_is_length_limited() -> None:
+    secret = "super-secret-password"
+    findings = scan_text(
+        f'password = "{secret}" ' + ("x" * 300),
+        source_path="sample.md",
+    )
+
+    assert len(findings) == 1
+    assert secret not in findings[0].excerpt
+    assert "[REDACTED]" in findings[0].excerpt
+    assert len(findings[0].excerpt) <= 160
+
+
+def test_finding_excerpt_redacts_overlapping_sensitive_values() -> None:
+    findings = scan_text(
+        "Contact owner@compute.internal/private/jobs",
+        source_path="sample.md",
+    )
+
+    assert findings
+    assert all("/private/jobs" not in finding.excerpt for finding in findings)
+
+
+def test_scan_public_content_rejects_missing_root(tmp_path: Path) -> None:
+    with pytest.raises(FileNotFoundError, match="does not exist"):
+        scan_public_content(tmp_path / "missing")
+
+
+def test_scan_public_content_rejects_file_root(tmp_path: Path) -> None:
+    file_path = tmp_path / "content.md"
+    file_path.write_text("safe", encoding="utf-8")
+
+    with pytest.raises(NotADirectoryError, match="not a directory"):
+        scan_public_content(file_path)
+
+
 def test_scan_script_runs_from_backend_root() -> None:
     backend_dir = Path(__file__).resolve().parents[1]
 
@@ -144,3 +226,40 @@ def test_scan_script_runs_from_backend_root() -> None:
 
     assert completed.returncode == 0, completed.stderr
     assert completed.stdout.strip() == "Public content safety scan passed."
+
+
+def test_scan_script_reports_redacted_findings_and_returns_one(tmp_path: Path) -> None:
+    backend_dir = Path(__file__).resolve().parents[1]
+    secret = "real-secret-123456"
+    (tmp_path / "unsafe.md").write_text(
+        f'secret = "{secret}"',
+        encoding="utf-8",
+    )
+
+    completed = subprocess.run(
+        [sys.executable, "scripts/scan_public_content.py", str(tmp_path)],
+        cwd=backend_dir,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert completed.returncode == 1
+    assert "[token]" in completed.stdout
+    assert "[REDACTED]" in completed.stdout
+    assert secret not in completed.stdout
+
+
+def test_scan_script_reports_missing_root_and_returns_nonzero(tmp_path: Path) -> None:
+    backend_dir = Path(__file__).resolve().parents[1]
+
+    completed = subprocess.run(
+        [sys.executable, "scripts/scan_public_content.py", str(tmp_path / "missing")],
+        cwd=backend_dir,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert completed.returncode != 0
+    assert "does not exist" in completed.stderr
