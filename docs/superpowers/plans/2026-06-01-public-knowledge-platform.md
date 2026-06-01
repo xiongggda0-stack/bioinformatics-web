@@ -66,33 +66,9 @@ docs/
 
 - [ ] **Step 1: 编写失败测试**
 
-创建 `backend/tests/test_content_safety_service.py`：
-
-```python
-from pathlib import Path
-
-from app.services.content_safety_service import scan_paths
-
-
-def test_scan_paths_flags_plaintext_login_password(tmp_path: Path) -> None:
-    content = tmp_path / "pipeline.py"
-    content.write_text("./lnd login -u <YOUR_USERNAME> -p <YOUR_PASSWORD>", encoding="utf-8")
-
-    findings = scan_paths([tmp_path])
-
-    assert len(findings) == 1
-    assert findings[0].rule == "login-password"
-
-
-def test_scan_paths_accepts_documented_placeholders(tmp_path: Path) -> None:
-    content = tmp_path / "pipeline.py"
-    content.write_text(
-        "./lnd login -u <YOUR_USERNAME> -p <YOUR_PASSWORD>",
-        encoding="utf-8",
-    )
-
-    assert scan_paths([tmp_path]) == []
-```
+在 `backend/tests/test_content_safety_service.py` 中覆盖登录凭据、Token、邮箱、个人路径、
+云存储 URI、内网地址、placeholder 放行、输出脱敏和脚本退出码。真实触发样本只保留在
+测试文件中，并使用明显虚构的值。
 
 - [ ] **Step 2: 运行测试并确认失败**
 
@@ -106,124 +82,32 @@ Expected: FAIL，提示 `app.services.content_safety_service` 不存在。
 
 - [ ] **Step 3: 实现扫描服务**
 
-创建 `backend/app/services/content_safety_service.py`：
-
-```python
-from dataclasses import dataclass
-from pathlib import Path
-import re
-
-
-@dataclass(frozen=True)
-class SafetyFinding:
-    path: Path
-    line_number: int
-    rule: str
-    excerpt: str
-
-
-LOGIN_PASSWORD_PATTERN = re.compile(
-    r"login\b[^\n]*\s-u\s+(?!<YOUR_USERNAME>)(\S+)"
-    r"[^\n]*\s-p\s+(?!<YOUR_PASSWORD>)(\S+)",
-    re.IGNORECASE,
-)
-TOKEN_PATTERN = re.compile(
-    r"(?i)\b(token|api[_-]?key|secret)\b\s*[:=]\s*"
-    r"(?!<YOUR_TOKEN>)([A-Za-z0-9._-]{8,})"
-)
-EMAIL_PATTERN = re.compile(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", re.IGNORECASE)
-WINDOWS_PATH_PATTERN = re.compile(r"\b[A-Za-z]:\\(?:[^\\\s]+\\?)+")
-
-RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
-    ("login-password", LOGIN_PASSWORD_PATTERN),
-    ("token", TOKEN_PATTERN),
-    ("email", EMAIL_PATTERN),
-    ("windows-absolute-path", WINDOWS_PATH_PATTERN),
-)
-
-
-def scan_paths(paths: list[Path]) -> list[SafetyFinding]:
-    findings: list[SafetyFinding] = []
-    for root in paths:
-        files = [root] if root.is_file() else sorted(root.rglob("*"))
-        for path in files:
-            if not path.is_file() or path.suffix not in {".py", ".json", ".md", ".ts", ".tsx"}:
-                continue
-            for line_number, line in enumerate(
-                path.read_text(encoding="utf-8").splitlines(),
-                start=1,
-            ):
-                for rule, pattern in RULES:
-                    if pattern.search(line):
-                        findings.append(
-                            SafetyFinding(
-                                path=path,
-                                line_number=line_number,
-                                rule=rule,
-                                excerpt=line.strip()[:160],
-                            )
-                        )
-    return findings
-```
-
-创建 `backend/scripts/scan_public_content.py`：
-
-```python
-from pathlib import Path
-import sys
-
-from app.services.content_safety_service import scan_paths
-
-
-def main() -> int:
-    roots = [Path("app/seed_data")]
-    findings = scan_paths(roots)
-    for finding in findings:
-        print(
-            f"{finding.path}:{finding.line_number}: "
-            f"[{finding.rule}] {finding.excerpt}"
-        )
-    if findings:
-        print(f"Found {len(findings)} public content safety issue(s).")
-        return 1
-    print("Public content safety scan passed.")
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
-```
+创建 `backend/app/services/content_safety_service.py` 和
+`backend/scripts/scan_public_content.py`。规则实现、输出脱敏和 CLI 行为以
+`backend/tests/test_content_safety_service.py` 为准，避免在公开文档中复制完整命中样本。
 
 - [ ] **Step 4: 脱敏已发现凭据**
 
-在 `backend/app/seed_data/pipelines.py` 中替换：
+在 `backend/app/seed_data/pipelines.py` 中将示例凭据替换为 placeholder：
 
 ```bash
 ./lnd login -u <YOUR_USERNAME> -p <YOUR_PASSWORD>
 ```
 
-为：
+教学示例中的脱敏前后关系应保持有意义，但不要在 docs 中组合出完整可命中的明文：
 
-```bash
-./lnd login -u <YOUR_USERNAME> -p <YOUR_PASSWORD>
-```
+- Before：用户名片段 `alice-lab-user`，密码片段 `fake` + `Secret123`。
+- After：`<YOUR_USERNAME>` 和 `<YOUR_PASSWORD>`。
+- Before：项目路径片段 `/home/` + `alice-lab-user/private-demo-project`。
+- After：`${PROJECT_DIR}`。
+- Before：对象存储片段 `oss://` + `private-demo-bucket/tutorial/input.fastq.gz`。
+- After：`oss://${BUCKET}/tutorial/input.fastq.gz`。
 
 - [ ] **Step 5: 在开发文档中增加扫描命令**
 
-在 `docs/DEVELOPMENT_SETUP.md` 增加：
-
-```markdown
-## 公开内容安全扫描
-
-新增或导入 Pipeline、软件文档、数据库教程后，运行：
-
-```powershell
-docker-compose exec -T backend python scripts/scan_public_content.py
-```
-
-示例命令禁止提交真实用户名、密码、Token、邮箱和本机绝对路径。请使用
-`<YOUR_USERNAME>`、`<YOUR_PASSWORD>`、`<YOUR_TOKEN>` 和 `<YOUR_PROJECT_DIR>`。
-```
+在 `docs/DEVELOPMENT_SETUP.md` 中记录默认 seed 扫描、docs 扫描和 placeholder 约定。
+用户名、密码、Token、路径和 bucket 示例分别使用 `<YOUR_USERNAME>`、
+`<YOUR_PASSWORD>`、`<YOUR_TOKEN>`、`${PROJECT_DIR}` 和 `${BUCKET}`。
 
 - [ ] **Step 6: 运行测试和真实扫描**
 
@@ -232,9 +116,10 @@ Run:
 ```powershell
 docker-compose exec -T backend python -m pytest tests/test_content_safety_service.py -q
 docker-compose exec -T backend python scripts/scan_public_content.py
+docker run --rm -e PYTHONDONTWRITEBYTECODE=1 -v "${PWD}\backend:/app:ro" -v "${PWD}\docs:/docs:ro" -w /app public-knowledge-platform-backend:latest python scripts/scan_public_content.py /docs
 ```
 
-Expected: `2 passed`，并输出 `Public content safety scan passed.`
+Expected：专项测试通过，两次扫描均输出 `Public content safety scan passed.`
 
 - [ ] **Step 7: 提交**
 

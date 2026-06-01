@@ -57,7 +57,13 @@ docker compose exec frontend npx tsc --noEmit --pretty false
 docker compose exec -T backend python scripts/scan_public_content.py
 ```
 
-新增或导入公开内容后必须执行安全扫描。禁止提交真实用户名、密码、Token、邮箱和本机绝对路径。示例中的敏感值应使用 `<YOUR_USERNAME>`、`<YOUR_PASSWORD>`、`<YOUR_OSS_RAW_DATA_URI>`、`<YOUR_PROJECT_DIR>` 或 `${VAR}` 形式的占位符。
+扫描 docs 目录时，需要显式挂载仓库根目录下的 docs：
+
+```powershell
+docker run --rm -e PYTHONDONTWRITEBYTECODE=1 -v "${PWD}\backend:/app:ro" -v "${PWD}\docs:/docs:ro" -w /app public-knowledge-platform-backend:latest python scripts/scan_public_content.py /docs
+```
+
+新增或导入公开内容后必须执行安全扫描。禁止提交真实用户名、密码、Token、邮箱、本机绝对路径和 bucket locator。示例中的用户名、密码、Token、路径和 bucket 应分别使用 `<YOUR_USERNAME>`、`<YOUR_PASSWORD>`、`<YOUR_TOKEN>`、`${PROJECT_DIR}` 和 `${BUCKET}`。需要完整 URI 时，在协议后组合 `${BUCKET}`，不要写入真实 bucket 名称。
 
 后端测试：
 

@@ -13,7 +13,7 @@ def rule_names(text: str) -> set[str]:
 
 def test_plain_login_password_is_reported() -> None:
     findings = scan_text(
-        "./lnd login -u X101SC250910114-Z01-J003 -p ggeah41n",
+        "./lnd login -u alice-lab-user -p fakeSecret123",
         source_path="pipelines.py",
     )
 
@@ -31,28 +31,30 @@ def test_login_placeholders_are_not_reported() -> None:
 
 @pytest.mark.parametrize(
     "password",
-    ['"secret123"', "'secret123'"],
+    ['"fakeSecret123"', "'fakeSecret123'"],
 )
 def test_quoted_login_passwords_are_reported(password: str) -> None:
-    assert "login-password" in rule_names(f"./lnd login -u private-user -p {password}")
+    assert "login-password" in rule_names(
+        f"./lnd login -u alice-lab-user -p {password}"
+    )
 
 
 def test_password_assignment_is_reported() -> None:
-    assert "login-password" in rule_names('password = "secret123"')
+    assert "login-password" in rule_names('password = "fakeSecret123"')
 
 
 def test_login_real_username_is_reported_when_password_is_placeholder() -> None:
     assert "login-password" in rule_names(
-        "./lnd login -u private-user -p <YOUR_PASSWORD>"
+        "./lnd login -u alice-lab-user -p <YOUR_PASSWORD>"
     )
 
 
 @pytest.mark.parametrize(
     "text",
     [
-        "./lnd login --username private-user --password secret123",
-        './lnd login --username="private-user" --password="secret123"',
-        "./lnd login -u='private-user' -p='secret123'",
+        "./lnd login --username alice-lab-user --password fakeSecret123",
+        './lnd login --username="alice-lab-user" --password="fakeSecret123"',
+        "./lnd login -u='alice-lab-user' -p='fakeSecret123'",
     ],
 )
 def test_login_option_variants_with_real_values_are_reported(text: str) -> None:
@@ -74,9 +76,9 @@ def test_login_option_variants_with_placeholders_are_not_reported(text: str) -> 
 @pytest.mark.parametrize(
     "text",
     [
-        "./lnd login --username private-user --password <YOUR_PASSWORD>",
-        './lnd login --username="private-user" --password="${PASSWORD}"',
-        "./lnd login -u='private-user' -p='<YOUR_PASSWORD>'",
+        "./lnd login --username alice-lab-user --password <YOUR_PASSWORD>",
+        './lnd login --username="alice-lab-user" --password="${PASSWORD}"',
+        "./lnd login -u='alice-lab-user' -p='<YOUR_PASSWORD>'",
     ],
 )
 def test_login_option_variants_report_real_username_with_placeholder_password(
@@ -88,18 +90,21 @@ def test_login_option_variants_report_real_username_with_placeholder_password(
 @pytest.mark.parametrize(
     ("text", "expected_rule"),
     [
-        ('api_token = "live-token-value-123456"', "token"),
-        ("token = realtoken123", "token"),
-        ("TOKEN: realtoken123", "token"),
-        ('api_key = "real-api-key-123456"', "token"),
-        ('secret = "real-secret-123456"', "token"),
-        ("Authorization: Bearer realtoken123", "token"),
-        ('{"Authorization": "Bearer realtoken123"}', "token"),
-        ("bearer = realtoken123", "token"),
-        ("Contact maintainer@example.edu before publishing.", "email"),
-        ("Contact maintainer@meta.data before publishing.", "email"),
-        (r'workdir = "C:\Users\alice\private-project"', "windows-absolute-path"),
-        ('workdir = "D:/private/project"', "windows-absolute-path"),
+        ('api_token = "fakeTokenValue123456"', "token"),
+        ("token = fakeToken123", "token"),
+        ("TOKEN: fakeToken123", "token"),
+        ('api_key = "fakeApiKey123456"', "token"),
+        ('secret = "fakeSecret123456"', "token"),
+        ("Authorization: Bearer fakeToken123", "token"),
+        ('{"Authorization": "Bearer fakeToken123"}', "token"),
+        ("bearer = fakeToken123", "token"),
+        ("Contact alice-lab-user@example.edu before publishing.", "email"),
+        ("Contact alice-lab-user@meta.data before publishing.", "email"),
+        (
+            r'workdir = "C:\Users\alice-lab-user\private-demo-project"',
+            "windows-absolute-path",
+        ),
+        ('workdir = "D:/private-demo/project"', "windows-absolute-path"),
     ],
 )
 def test_supported_sensitive_value_rules_are_reported(
@@ -142,32 +147,32 @@ def test_token_rule_ignores_placeholders_and_tutorial_prose(text: str) -> None:
 @pytest.mark.parametrize(
     "text",
     [
-        "oss://CP2023071800097/private/01.RawData",
-        "/public/home/yhpeng/cut_tag/results",
-        "/home/alice/private-project/results",
-        "/Users/alice/private-project/results",
-        "http://10.23.45.67:8080/private/api",
-        "192.168.10.42",
-        "172.16.1.5",
-        "https://compute.cluster.internal/jobs",
-        "cache.service.local",
-        "/scratch/alice/private-project/results",
-        "/data/alice/private-project/results",
-        "/gpfs/users/alice/private-project/results",
-        "/home/alice",
-        "/scratch/alice",
-        "/data/alice",
-        "/gpfs/users/alice",
-        "/gpfs/project/alice/private-project",
-        "http://compute01:8080/private/api",
-        "hdfs://compute01/user/alice/private-project",
-        "hdfs://namenode.example.com/user/alice/private-project",
-        "s3://real-bucket/tutorial/input.fastq.gz",
-        "gs://real-bucket/tutorial/input.fastq.gz",
-        "cos://real-bucket/tutorial/input.fastq.gz",
-        "obs://real-bucket/tutorial/input.fastq.gz",
-        "abfs://real-container/tutorial/input.fastq.gz",
-        "abfss://real-container@storage-account.dfs.core.windows.net/tutorial/input.fastq.gz",
+        "oss://private-demo-bucket/tutorial/01.RawData",
+        "/public/home/alice-lab-user/private-demo-project/results",
+        "/home/alice-lab-user/private-demo-project/results",
+        "/Users/alice-lab-user/private-demo-project/results",
+        "http://10.0.0.42:8080/private-demo/api",
+        "192.168.0.42",
+        "172.16.0.42",
+        "https://compute-demo.cluster.internal/jobs",
+        "cache-demo.service.local",
+        "/scratch/alice-lab-user/private-demo-project/results",
+        "/data/alice-lab-user/private-demo-project/results",
+        "/gpfs/users/alice-lab-user/private-demo-project/results",
+        "/home/alice-lab-user",
+        "/scratch/alice-lab-user",
+        "/data/alice-lab-user",
+        "/gpfs/users/alice-lab-user",
+        "/gpfs/project/alice-lab-user/private-demo-project",
+        "http://compute-demo-01:8080/private/api",
+        "hdfs://compute-demo-01/user/alice-lab-user/private-demo-project",
+        "hdfs://namenode-demo.example.com/user/alice-lab-user/private-demo-project",
+        "s3://private-demo-bucket/tutorial/input.fastq.gz",
+        "gs://private-demo-bucket/tutorial/input.fastq.gz",
+        "cos://private-demo-bucket/tutorial/input.fastq.gz",
+        "obs://private-demo-bucket/tutorial/input.fastq.gz",
+        "abfs://private-demo-container/tutorial/input.fastq.gz",
+        "abfss://private-demo-container@storage-demo.dfs.core.windows.net/tutorial/input.fastq.gz",
     ],
 )
 def test_private_locators_are_reported(text: str) -> None:
@@ -237,11 +242,11 @@ def test_private_locator_ignores_common_data_directories(text: str) -> None:
 def test_scan_public_content_reads_supported_extensions_only(tmp_path: Path) -> None:
     for suffix in [".py", ".json", ".md", ".ts", ".tsx"]:
         (tmp_path / f"unsafe{suffix}").write_text(
-            'api_token = "live-token-value-123456"',
+            'api_token = "fakeTokenValue123456"',
             encoding="utf-8",
         )
     (tmp_path / "ignored.txt").write_text(
-        'api_token = "live-token-value-123456"',
+        'api_token = "fakeTokenValue123456"',
         encoding="utf-8",
     )
 
@@ -259,7 +264,7 @@ def test_scan_public_content_reads_supported_extensions_only(tmp_path: Path) -> 
 def test_scan_public_content_tolerates_non_utf8_bytes(tmp_path: Path) -> None:
     source_path = tmp_path / "unsafe.md"
     source_path.write_bytes(
-        b"\xff\n./lnd login -u private-user -p private-password\n"
+        b"\xff\n./lnd login -u alice-lab-user -p fakeSecret123\n"
     )
 
     findings = scan_public_content(tmp_path)
@@ -268,7 +273,7 @@ def test_scan_public_content_tolerates_non_utf8_bytes(tmp_path: Path) -> None:
 
 
 def test_finding_excerpt_redacts_sensitive_value_and_is_length_limited() -> None:
-    secret = "super-secret-password"
+    secret = "fakeSecretPassword123"
     findings = scan_text(
         f'password = "{secret}" ' + ("x" * 300),
         source_path="sample.md",
@@ -281,7 +286,7 @@ def test_finding_excerpt_redacts_sensitive_value_and_is_length_limited() -> None
 
 
 def test_private_locator_excerpt_is_redacted_and_length_limited() -> None:
-    locator = "hdfs://compute01/user/alice/private-project"
+    locator = "hdfs://compute-demo-01/user/alice-lab-user/private-demo-project"
     findings = scan_text(
         f"private source: {locator} " + ("x" * 300),
         source_path="sample.md",
@@ -295,12 +300,12 @@ def test_private_locator_excerpt_is_redacted_and_length_limited() -> None:
 
 def test_finding_excerpt_redacts_overlapping_sensitive_values() -> None:
     findings = scan_text(
-        "Contact owner@compute.internal/private/jobs",
+        "Contact alice-lab-user@compute-demo.internal/private-demo/jobs",
         source_path="sample.md",
     )
 
     assert findings
-    assert all("/private/jobs" not in finding.excerpt for finding in findings)
+    assert all("/private-demo/jobs" not in finding.excerpt for finding in findings)
 
 
 def test_scan_public_content_rejects_missing_root(tmp_path: Path) -> None:
@@ -333,7 +338,7 @@ def test_scan_script_runs_from_backend_root() -> None:
 
 def test_scan_script_reports_redacted_findings_and_returns_one(tmp_path: Path) -> None:
     backend_dir = Path(__file__).resolve().parents[1]
-    secret = "real-secret-123456"
+    secret = "fakeSecret123456"
     (tmp_path / "unsafe.md").write_text(
         f'secret = "{secret}"',
         encoding="utf-8",
