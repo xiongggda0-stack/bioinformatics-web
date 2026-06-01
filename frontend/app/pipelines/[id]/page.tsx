@@ -13,7 +13,9 @@ import RelatedResources, {
   type RelatedLiterature,
   type RelatedPipeline
 } from "@/components/RelatedResources";
+import TrustPanel from "@/components/TrustPanel";
 import { extractTocItems } from "@/lib/markdownToc";
+import type { TrustMetadata } from "@/lib/trustMetadata";
 
 interface Pipeline {
   id: number;
@@ -28,7 +30,7 @@ interface Pipeline {
   created_at: string;
 }
 
-interface PipelineMetadata {
+interface PipelineMetadata extends TrustMetadata {
   difficulty?: string;
   tools?: string[];
   inputs?: string[];
@@ -393,6 +395,7 @@ export default async function PipelineDetailPage({
         </>
       }
     >
+      <TrustPanel metadata={pipeline.metadata_json ?? {}} />
       <PipelineMetadataPanel metadata={pipeline.metadata_json ?? {}} />
       <PipelineFlow dag={getDag(pipeline)} />
       <DetailSectionCard

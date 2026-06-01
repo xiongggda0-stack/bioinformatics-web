@@ -11,7 +11,9 @@ import RelatedResources, {
   type RelatedLiterature,
   type RelatedPipeline
 } from "@/components/RelatedResources";
+import TrustPanel from "@/components/TrustPanel";
 import { extractTocItems } from "@/lib/markdownToc";
+import type { TrustMetadata } from "@/lib/trustMetadata";
 
 interface Algorithm {
   id: number;
@@ -22,6 +24,7 @@ interface Algorithm {
   tool_type: string;
   summary: string;
   performance_json: Record<string, unknown>;
+  metadata_json: TrustMetadata;
   markdown_docs: string;
   created_at: string;
 }
@@ -175,6 +178,11 @@ export default async function AlgorithmDetailPage({
         </>
       }
     >
+      <TrustPanel
+        metadata={algorithm.metadata_json ?? {}}
+        officialLinkLabel="查看官方文档"
+      />
+
       <DetailSectionCard
         eyebrow="Benchmark"
         title="性能基准测试"
