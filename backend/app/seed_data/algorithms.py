@@ -29,7 +29,7 @@ ALGORITHM_METADATA_OVERRIDES: dict[str, dict[str, str]] = {
     },
     "Cell Ranger": {
         "official_docs_url": "https://www.10xgenomics.com/support/software/cell-ranger",
-        "version": "10.0（校验于 2026-06-01；执行前请以官方稳定版为准）",
+        "version": "10.0.0（校验于 2026-06-01；执行前请以官方稳定版为准）",
         "installation": "Download and install the official 10x Genomics tarball",
     },
     "Seurat v5": {

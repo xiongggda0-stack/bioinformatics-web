@@ -62,7 +62,7 @@ def test_core_algorithm_versions_expose_reviewed_versions_and_durable_reminder(
         "Salmon": "1.11.4",
         "featureCounts": "Subread 2.1.1",
         "DESeq2": "1.52.0",
-        "Cell Ranger": "10.0",
+        "Cell Ranger": "10.0.0",
         "Seurat v5": "5.5.0",
     }
 
