@@ -28,6 +28,8 @@ const searchTabs: SearchTab[] = [
   { type: "literature", label: "文献" }
 ];
 
+const popularQueries = ["RNA-seq", "Seurat", "GEO", "WGCNA", "CUT&Tag"];
+
 const emptyResponse: SearchResponse = {
   query: "",
   total: 0,
@@ -100,6 +102,25 @@ export default async function SearchPage({
           </button>
         </form>
 
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="text-xs font-semibold text-slate-500">
+            热门搜索
+          </span>
+          {popularQueries.map((item) => (
+            <Link
+              key={item}
+              href={`/search?q=${encodeURIComponent(item)}`}
+              className="rounded bg-white px-2.5 py-1 text-xs text-slate-600 ring-1 ring-slate-200 transition hover:text-teal hover:ring-teal"
+            >
+              {item}
+            </Link>
+          ))}
+        </div>
+
+        <p className="mt-4 text-xs leading-5 text-slate-500">
+          结果按相关度排序：标题完全匹配优先，其次是标题包含、分类标签、摘要和正文命中。
+        </p>
+
         <div className="mt-6 flex gap-2 overflow-x-auto pb-1">
           {searchTabs.map((tab) => {
             const href = `/search?q=${encodeURIComponent(query)}${
@@ -129,7 +150,11 @@ export default async function SearchPage({
               搜索服务暂时不可用，请稍后重试。
             </div>
           ) : (
-            <SearchResults items={response.items} hasQuery={hasQuery} />
+            <SearchResults
+              items={response.items}
+              hasQuery={hasQuery}
+              query={query}
+            />
           )}
         </div>
       </section>

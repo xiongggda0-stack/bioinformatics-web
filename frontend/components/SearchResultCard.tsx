@@ -1,8 +1,10 @@
 import Link from "next/link";
+import SearchHighlight from "@/components/SearchHighlight";
 import type { SearchItemType, SearchResultItem } from "@/lib/searchTypes";
 
 interface SearchResultCardProps {
   item: SearchResultItem;
+  query?: string;
   compact?: boolean;
   onNavigate?: () => void;
 }
@@ -25,6 +27,7 @@ const resultTypeStyles: Record<SearchItemType, string> = {
 
 export default function SearchResultCard({
   item,
+  query,
   compact = false,
   onNavigate
 }: SearchResultCardProps): JSX.Element {
@@ -48,7 +51,7 @@ export default function SearchResultCard({
               compact ? "truncate text-sm" : "text-base"
             }`}
           >
-            {item.title}
+            <SearchHighlight text={item.title} query={query} />
           </h2>
           <p
             className={`mt-1 text-slate-600 ${
@@ -57,7 +60,7 @@ export default function SearchResultCard({
                 : "line-clamp-3 text-sm leading-6"
             }`}
           >
-            {item.description}
+            <SearchHighlight text={item.description} query={query} />
           </p>
 
           {!compact && item.tags.length > 0 ? (

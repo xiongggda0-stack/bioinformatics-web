@@ -146,6 +146,7 @@ export default function GlobalSearch(): JSX.Element {
                   <SearchResultCard
                     key={`${result.type}-${result.id}`}
                     item={result}
+                    query={trimmedKeyword}
                     compact
                     onNavigate={() => setIsOpen(false)}
                   />

@@ -4,11 +4,13 @@ import type { SearchResultItem } from "@/lib/searchTypes";
 interface SearchResultsProps {
   items: SearchResultItem[];
   hasQuery: boolean;
+  query?: string;
 }
 
 export default function SearchResults({
   items,
-  hasQuery
+  hasQuery,
+  query
 }: SearchResultsProps): JSX.Element {
   if (!hasQuery) {
     return (
@@ -30,7 +32,11 @@ export default function SearchResults({
   return (
     <div className="grid gap-3">
       {items.map((item) => (
-        <SearchResultCard key={`${item.type}-${item.id}`} item={item} />
+        <SearchResultCard
+          key={`${item.type}-${item.id}`}
+          item={item}
+          query={query}
+        />
       ))}
     </div>
   );
