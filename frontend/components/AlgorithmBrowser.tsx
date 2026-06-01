@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState, useTransition } from "react";
 
+import { formatDisplayDate } from "@/lib/dateFormat.mjs";
+
 export interface Algorithm {
   id: number;
   name: string;
@@ -389,7 +391,7 @@ function AlgorithmCard({ algorithm }: { algorithm: Algorithm }): JSX.Element {
       </p>
       <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
         <span className="text-xs text-slate-500">
-          {new Date(algorithm.created_at).toLocaleDateString("zh-CN")}
+          {formatDisplayDate(algorithm.created_at)}
         </span>
         <span className="text-sm font-semibold text-teal transition group-hover:text-coral">
           查看原理

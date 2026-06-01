@@ -12,6 +12,7 @@ import RelatedResources, {
   type RelatedPipeline
 } from "@/components/RelatedResources";
 import TrustPanel from "@/components/TrustPanel";
+import { formatDisplayDate } from "@/lib/dateFormat.mjs";
 import { extractTocItems } from "@/lib/markdownToc";
 import type { TrustMetadata } from "@/lib/trustMetadata";
 
@@ -153,7 +154,7 @@ export default async function AlgorithmDetailPage({
     },
     {
       label: "创建时间",
-      value: new Date(algorithm.created_at).toLocaleDateString("zh-CN")
+      value: formatDisplayDate(algorithm.created_at)
     }
   ];
 

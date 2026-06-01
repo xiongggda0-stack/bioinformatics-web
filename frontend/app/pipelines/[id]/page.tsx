@@ -14,6 +14,7 @@ import RelatedResources, {
   type RelatedPipeline
 } from "@/components/RelatedResources";
 import TrustPanel from "@/components/TrustPanel";
+import { formatDisplayDate } from "@/lib/dateFormat.mjs";
 import { extractTocItems } from "@/lib/markdownToc";
 import type { TrustMetadata } from "@/lib/trustMetadata";
 
@@ -349,7 +350,7 @@ export default async function PipelineDetailPage({
   const metaItems: DetailMetaItem[] = [
     {
       label: "创建时间",
-      value: new Date(pipeline.created_at).toLocaleDateString("zh-CN")
+      value: formatDisplayDate(pipeline.created_at)
     },
     {
       label: "分析难度",

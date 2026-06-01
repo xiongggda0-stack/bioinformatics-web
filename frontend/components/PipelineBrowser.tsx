@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState, useTransition } from "react";
 
+import { formatDisplayDate } from "@/lib/dateFormat.mjs";
+
 export interface Pipeline {
   id: number;
   title: string;
@@ -537,7 +539,7 @@ function PipelineCard({ pipeline }: { pipeline: Pipeline }): JSX.Element {
       ) : null}
       <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
         <span className="text-xs text-slate-500">
-          {new Date(pipeline.created_at).toLocaleDateString("zh-CN")}
+          {formatDisplayDate(pipeline.created_at)}
         </span>
         <span className="text-sm font-semibold text-teal transition group-hover:text-coral">
           查看详情
