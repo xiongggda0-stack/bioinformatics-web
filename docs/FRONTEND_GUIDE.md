@@ -13,12 +13,15 @@ frontend/
     algorithms/
     literatures/
     databases/
+    learning-paths/
     search/
   components/
     Navbar.tsx
     GlobalSearch.tsx
+    SearchHighlight.tsx
     SearchResultCard.tsx
     SearchResults.tsx
+    TrustPanel.tsx
     PipelineBrowser.tsx
     MarkdownRenderer.tsx
     PipelineToc.tsx
@@ -34,7 +37,14 @@ frontend/
 
 文件：`frontend/app/page.tsx`
 
-展示平台三大入口：Pipeline、Algorithm、Literature。
+首页优先从研究问题出发，引导用户进入可复用流程；同时展示平台指标、
+分析闭环和 Pipeline、Software、Database、Literature 四类资源入口。
+
+### Learning Paths
+
+- `/learning-paths`：四条精选学习路线。
+- 路线步骤连接流程、软件、数据库、教程和文献页面。
+- 当前路线包括 Bulk RNA-seq、单细胞 RNA-seq、公共数据复用和文献证据链。
 
 ### Pipeline
 
@@ -91,6 +101,15 @@ frontend/
 - 顶部 `GlobalSearch.tsx`：调用 `/api/search`，显示最多 8 条快速预览。
 - `/search`：完整搜索中心，支持资源类型筛选。
 - 搜索关键词和类型都写入 URL，便于刷新、收藏和分享。
+- `SearchHighlight.tsx`：在完整结果页和顶部快速预览中高亮查询词。
+- 搜索页提供热门搜索词和排序说明。
+
+## 公开知识平台体验
+
+- `/learning-paths`：四条精选学习路线。
+- `TrustPanel.tsx`：Pipeline 和软件详情页共用的可信度面板。
+- `SearchHighlight.tsx`：全站搜索结果关键词高亮。
+- 首页优先使用研究问题入口，引导用户进入流程。
 
 ## 数据请求模式
 

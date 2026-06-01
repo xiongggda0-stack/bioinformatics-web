@@ -30,6 +30,14 @@
 
 `category_key/category_name` 已经落库，用于列表分类、详情同类推荐和后续后台管理。
 
+## 公开可信度元数据
+
+- Pipeline 使用 `metadata_json` 保存验证状态、更新时间、适用范围和免责声明。
+- Algorithm 使用 `metadata_json` 保存验证状态、更新时间、版本说明、安装方式、
+  官方文档地址、适用范围和免责声明。
+- 软件版本记录包含校验日期，同时提醒正式执行前以官方稳定版为准。
+- 缺失字段由前端统一显示为“待补充”。
+
 ## Seed 数据目录
 
 ```text
@@ -47,7 +55,7 @@ backend/app/seed_data/
 职责：
 
 - `pipelines.py`：分析流程 mock 数据、分类推断、元数据推断、upsert。
-- `algorithms.py`：算法工具 mock 数据、性能 JSON、Markdown 文档。
+- `algorithms.py`：算法工具 mock 数据、性能 JSON、Markdown 文档、可信度元数据和 upsert。
 - `literatures.py`：文献 mock 数据、Pipeline/Algorithm 外键关联。
 - `databases.py`：数据库导航资源 JSON 加载、字段映射与 upsert。
 - `database_tutorials.py`：独立数据库教程 JSON 加载、资源关联与 upsert。
