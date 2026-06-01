@@ -48,6 +48,44 @@ def test_login_real_username_is_reported_when_password_is_placeholder() -> None:
 
 
 @pytest.mark.parametrize(
+    "text",
+    [
+        "./lnd login --username private-user --password secret123",
+        './lnd login --username="private-user" --password="secret123"',
+        "./lnd login -u='private-user' -p='secret123'",
+    ],
+)
+def test_login_option_variants_with_real_values_are_reported(text: str) -> None:
+    assert "login-password" in rule_names(text)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "./lnd login --username <YOUR_USERNAME> --password <YOUR_PASSWORD>",
+        './lnd login --username="${USERNAME}" --password="${PASSWORD}"',
+        "./lnd login -u='<YOUR_USERNAME>' -p='${PASSWORD}'",
+    ],
+)
+def test_login_option_variants_with_placeholders_are_not_reported(text: str) -> None:
+    assert "login-password" not in rule_names(text)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "./lnd login --username private-user --password <YOUR_PASSWORD>",
+        './lnd login --username="private-user" --password="${PASSWORD}"',
+        "./lnd login -u='private-user' -p='<YOUR_PASSWORD>'",
+    ],
+)
+def test_login_option_variants_report_real_username_with_placeholder_password(
+    text: str,
+) -> None:
+    assert "login-password" in rule_names(text)
+
+
+@pytest.mark.parametrize(
     ("text", "expected_rule"),
     [
         ('api_token = "live-token-value-123456"', "token"),
@@ -116,9 +154,17 @@ def test_token_rule_ignores_placeholders_and_tutorial_prose(text: str) -> None:
         "/scratch/alice/private-project/results",
         "/data/alice/private-project/results",
         "/gpfs/users/alice/private-project/results",
+        "/home/alice",
+        "/scratch/alice",
+        "/data/alice",
+        "/gpfs/users/alice",
+        "/gpfs/project/alice/private-project",
         "http://compute01:8080/private/api",
         "hdfs://compute01/user/alice/private-project",
+        "hdfs://namenode.example.com/user/alice/private-project",
         "s3://real-bucket/tutorial/input.fastq.gz",
+        "abfs://real-container/tutorial/input.fastq.gz",
+        "abfss://real-container@storage-account.dfs.core.windows.net/tutorial/input.fastq.gz",
     ],
 )
 def test_private_locators_are_reported(text: str) -> None:
@@ -139,6 +185,11 @@ def test_private_locators_are_reported(text: str) -> None:
         "https://example.com/tutorial/input.fastq.gz",
         "s3://${BUCKET}/tutorial/input.fastq.gz",
         "s3://<YOUR_BUCKET>/tutorial/input.fastq.gz",
+        "abfs://${CONTAINER}/tutorial/input.fastq.gz",
+        "abfss://<YOUR_CONTAINER>@${STORAGE_ACCOUNT}.dfs.core.windows.net/tutorial/input.fastq.gz",
+        "hdfs://${NAMENODE}/user/<YOUR_USERNAME>/private-project",
+        r"C:\Users\<YOUR_USERNAME>\tutorial\input.fastq.gz",
+        r"D:\${PROJECT_DIR}\tutorial\input.fastq.gz",
     ],
 )
 def test_private_locator_placeholders_are_not_reported(text: str) -> None:
@@ -148,8 +199,28 @@ def test_private_locator_placeholders_are_not_reported(text: str) -> None:
 @pytest.mark.parametrize(
     "text",
     [
+        r"C:\Users\<YOUR_USERNAME>\tutorial\input.fastq.gz",
+        r"D:\${PROJECT_DIR}\tutorial\input.fastq.gz",
+    ],
+)
+def test_windows_absolute_path_placeholders_are_not_reported(text: str) -> None:
+    assert "windows-absolute-path" not in rule_names(text)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "/data/fastq",
+        "/data/image",
+        "--fastqs=/data/fastq --sample=sample01",
+        "--image=/data/image --sample=sample01",
         "/data/fastq/sampleA",
         "/data/image/tissue_hires_image.tif",
+        "/data/tutorial/input.fastq.gz",
+        "/scratch/tutorial/input.fastq.gz",
+        "/gpfs/users/tutorial/input.fastq.gz",
+        "/home/example/private-project",
+        "/gpfs/project/example/private-project",
     ],
 )
 def test_private_locator_ignores_common_data_directories(text: str) -> None:

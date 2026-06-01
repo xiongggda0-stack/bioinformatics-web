@@ -10,13 +10,11 @@ REDACTED = "[REDACTED]"
 _PLACEHOLDER_TEXT = r"(?:<YOUR_[A-Z0-9_]+>|\$\{[A-Z_][A-Z0-9_]*\})"
 _VALUE_TEXT = r"(?:\"[^\"\r\n]{1,512}\"|'[^'\r\n]{1,512}'|[^\s\"'`]{1,512})"
 _PLACEHOLDER_PATTERN = re.compile(rf"^{_PLACEHOLDER_TEXT}$", re.IGNORECASE)
-_PLACEHOLDER_PREFIX_PATTERN = re.compile(
-    rf"^{_PLACEHOLDER_TEXT}(?:/|$)",
-    re.IGNORECASE,
-)
+_PLACEHOLDER_SEARCH_PATTERN = re.compile(_PLACEHOLDER_TEXT, re.IGNORECASE)
 _LOGIN_COMMAND_PATTERN = re.compile(r"\blogin\b[^\r\n]{0,512}", re.IGNORECASE)
 _LOGIN_OPTION_PATTERN = re.compile(
-    rf"(?:^|\s)-(?P<option>[up])\s+(?P<value>{_VALUE_TEXT})",
+    rf"(?:^|\s)(?:--(?:username|password)|-[up])"
+    rf"(?:\s*=\s*|\s+)(?P<value>{_VALUE_TEXT})",
     re.IGNORECASE,
 )
 _PASSWORD_PATTERN = re.compile(
@@ -45,24 +43,28 @@ _WINDOWS_ABSOLUTE_PATH_PATTERN = re.compile(
     re.IGNORECASE,
 )
 _CLOUD_URI_PATTERN = re.compile(
-    rf"\b(?:oss|s3|gs|cos|obs)://(?P<value>[^\s\"'`\\]{{1,512}})",
+    rf"\b(?:oss|s3|gs|cos|obs|abfs|abfss)://(?P<value>[^\s\"'`\\]{{1,512}})",
+    re.IGNORECASE,
+)
+_HDFS_URI_PATTERN = re.compile(
+    rf"\bhdfs://(?P<value>[^\s\"'`\\]{{1,512}})",
     re.IGNORECASE,
 )
 _PERSONAL_PATH_PATTERN = re.compile(
     rf"(?:/public/home|/home|/Users|/scratch)/"
-    rf"(?P<user>{_PLACEHOLDER_TEXT}|[A-Za-z0-9._-]{{1,128}})/"
-    rf"[^\s\"'`\\]{{1,384}}",
+    rf"(?P<user>{_PLACEHOLDER_TEXT}|[A-Za-z0-9._-]{{1,128}})"
+    rf"(?:/[^\s\"'`\\]{{1,384}})?",
+    re.IGNORECASE,
 )
 _DATA_PERSONAL_PATH_PATTERN = re.compile(
-    rf"/data/(?!fastq/|image/|input/|output/|raw/|ref/|reference/|results?/|tmp/)"
-    rf"(?P<user>{_PLACEHOLDER_TEXT}|[A-Za-z0-9._-]{{1,128}})/"
-    rf"[^\s\"'`\\]{{1,384}}",
+    rf"/data/(?P<user>{_PLACEHOLDER_TEXT}|[A-Za-z0-9._-]{{1,128}})"
+    rf"(?:/[^\s\"'`\\]{{1,384}})?",
     re.IGNORECASE,
 )
 _GPFS_PERSONAL_PATH_PATTERN = re.compile(
-    rf"/gpfs/users/"
-    rf"(?P<user>{_PLACEHOLDER_TEXT}|[A-Za-z0-9._-]{{1,128}})/"
-    rf"[^\s\"'`\\]{{1,384}}",
+    rf"/gpfs/(?:users|project)/"
+    rf"(?P<user>{_PLACEHOLDER_TEXT}|[A-Za-z0-9._-]{{1,128}})"
+    rf"(?:/[^\s\"'`\\]{{1,384}})?",
     re.IGNORECASE,
 )
 _IP_OCTET = r"(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})"
@@ -80,12 +82,25 @@ _PRIVATE_DOMAIN_PATTERN = re.compile(
     re.IGNORECASE,
 )
 _INTERNAL_SINGLE_LABEL_URI_PATTERN = re.compile(
-    r"(?<![A-Za-z0-9.-])(?:https?|hdfs)://"
+    r"(?<![A-Za-z0-9.-])https?://"
     r"(?P<host>[A-Za-z0-9-]+)(?![A-Za-z0-9.-])"
     r"(?::[0-9]{1,5})?(?:/[^\s\"'`\\]{0,384})?",
     re.IGNORECASE,
 )
 _IGNORED_EMAIL_DOMAINS = {"example.com", "example.org", "example.net"}
+_IGNORED_DATA_PATH_USERS = {
+    "fastq",
+    "image",
+    "input",
+    "output",
+    "raw",
+    "ref",
+    "reference",
+    "result",
+    "results",
+    "tmp",
+}
+_IGNORED_PATH_USERS = {"example", "tutorial"}
 
 
 @dataclass(frozen=True)
@@ -113,8 +128,16 @@ def _is_placeholder(value: str) -> bool:
     return _PLACEHOLDER_PATTERN.fullmatch(_unquote(value)) is not None
 
 
-def _starts_with_placeholder(value: str) -> bool:
-    return _PLACEHOLDER_PREFIX_PATTERN.match(_unquote(value)) is not None
+def _contains_placeholder(value: str) -> bool:
+    return _PLACEHOLDER_SEARCH_PATTERN.search(_unquote(value)) is not None
+
+
+def _is_ignored_path_user(value: str) -> bool:
+    return _is_placeholder(value) or value.lower() in _IGNORED_PATH_USERS
+
+
+def _is_ignored_data_path_user(value: str) -> bool:
+    return _is_ignored_path_user(value) or value.lower() in _IGNORED_DATA_PATH_USERS
 
 
 def _is_r_slot_expression(line: str, match: re.Match[str]) -> bool:
@@ -174,20 +197,30 @@ def _find_line_matches(line: str) -> list[_LineMatch]:
         matches.append(_LineMatch("email", match.start(), match.end()))
 
     for match in _WINDOWS_ABSOLUTE_PATH_PATTERN.finditer(line):
-        matches.append(_LineMatch("windows-absolute-path", match.start(), match.end()))
+        if not _contains_placeholder(match.group(0)):
+            matches.append(
+                _LineMatch("windows-absolute-path", match.start(), match.end())
+            )
 
     for match in _CLOUD_URI_PATTERN.finditer(line):
-        if not _starts_with_placeholder(match.group("value")):
+        if not _contains_placeholder(match.group("value")):
+            matches.append(_LineMatch("private-locator", match.start(), match.end()))
+
+    for match in _HDFS_URI_PATTERN.finditer(line):
+        if not _contains_placeholder(match.group("value")):
             matches.append(_LineMatch("private-locator", match.start(), match.end()))
 
     for pattern in (
         _PERSONAL_PATH_PATTERN,
-        _DATA_PERSONAL_PATH_PATTERN,
         _GPFS_PERSONAL_PATH_PATTERN,
     ):
         for match in pattern.finditer(line):
-            if not _is_placeholder(match.group("user")):
+            if not _is_ignored_path_user(match.group("user")):
                 matches.append(_LineMatch("private-locator", match.start(), match.end()))
+
+    for match in _DATA_PERSONAL_PATH_PATTERN.finditer(line):
+        if not _is_ignored_data_path_user(match.group("user")):
+            matches.append(_LineMatch("private-locator", match.start(), match.end()))
 
     for pattern in (_PRIVATE_IP_PATTERN, _PRIVATE_DOMAIN_PATTERN):
         for match in pattern.finditer(line):
