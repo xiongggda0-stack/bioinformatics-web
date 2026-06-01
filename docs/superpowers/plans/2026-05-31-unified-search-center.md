@@ -30,12 +30,12 @@ In the current Codex terminal, prefer:
 docker-compose ...
 ```
 
-The installed `docker-compose` standalone command works. The `docker compose` plugin lookup currently fails in this terminal because access to `C:\Users\yhpeng\.docker\config.json` is restricted. This does not block implementation.
+The installed `docker-compose` standalone command works. The `docker compose` plugin lookup currently fails in this terminal because access to `<YOUR_DOCKER_CONFIG_PATH>` is restricted. This does not block implementation.
 
 Before execution, initialize Git so each migration stage has a rollback point:
 
 ```powershell
-cd D:\Bioinformatics_Web\Bioinformatics_Web
+cd <YOUR_PROJECT_DIR>
 git init
 git add .
 git commit -m "chore: capture bioinformatics platform baseline"
@@ -125,7 +125,7 @@ frontend/lib/databaseResources.ts
 Run:
 
 ```powershell
-cd D:\Bioinformatics_Web\Bioinformatics_Web
+cd <YOUR_PROJECT_DIR>
 git init
 git add .
 git commit -m "chore: capture bioinformatics platform baseline"

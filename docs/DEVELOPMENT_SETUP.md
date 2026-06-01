@@ -5,13 +5,13 @@
 当前项目位于：
 
 ```powershell
-D:\Bioinformatics_Web\Bioinformatics_Web
+<YOUR_PROJECT_DIR>
 ```
 
 进入项目：
 
 ```powershell
-cd D:\Bioinformatics_Web\Bioinformatics_Web
+cd <YOUR_PROJECT_DIR>
 ```
 
 ## 启动服务

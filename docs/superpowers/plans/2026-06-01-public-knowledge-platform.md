@@ -76,7 +76,7 @@ from app.services.content_safety_service import scan_paths
 
 def test_scan_paths_flags_plaintext_login_password(tmp_path: Path) -> None:
     content = tmp_path / "pipeline.py"
-    content.write_text("./lnd login -u real-user -p real-password", encoding="utf-8")
+    content.write_text("./lnd login -u <YOUR_USERNAME> -p <YOUR_PASSWORD>", encoding="utf-8")
 
     findings = scan_paths([tmp_path])
 
@@ -199,7 +199,7 @@ if __name__ == "__main__":
 在 `backend/app/seed_data/pipelines.py` 中替换：
 
 ```bash
-./lnd login -u X101SC250910114-Z01-J003 -p ggeah41n
+./lnd login -u <YOUR_USERNAME> -p <YOUR_PASSWORD>
 ```
 
 为：
