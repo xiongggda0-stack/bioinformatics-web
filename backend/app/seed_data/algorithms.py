@@ -6,6 +6,66 @@ from sqlalchemy.orm import Session
 from app.models import Algorithm
 
 
+ALGORITHM_METADATA_OVERRIDES: dict[str, dict[str, str]] = {
+    "STAR": {
+        "official_docs_url": "https://github.com/alexdobin/STAR",
+        "version": "2.7.x",
+        "installation": "Bioconda: mamba install -c bioconda star",
+    },
+    "Salmon": {
+        "official_docs_url": "https://salmon.readthedocs.io/en/latest/",
+        "version": "1.10.x",
+        "installation": "Bioconda: mamba install -c bioconda salmon",
+    },
+    "featureCounts": {
+        "official_docs_url": "https://subread.sourceforge.net/featureCounts.html",
+        "version": "Subread 2.x",
+        "installation": "Bioconda: mamba install -c bioconda subread",
+    },
+    "DESeq2": {
+        "official_docs_url": "https://bioconductor.org/packages/release/bioc/html/DESeq2.html",
+        "version": "Bioconductor release",
+        "installation": 'Bioconductor: BiocManager::install("DESeq2")',
+    },
+    "Cell Ranger": {
+        "official_docs_url": "https://www.10xgenomics.com/support/software/cell-ranger",
+        "version": "9.x",
+        "installation": "Download and install the official 10x Genomics tarball",
+    },
+    "Seurat v5": {
+        "official_docs_url": "https://satijalab.org/seurat/",
+        "version": "5.x",
+        "installation": 'CRAN: install.packages("Seurat")',
+    },
+}
+
+
+def infer_algorithm_metadata(item: dict[str, Any]) -> dict[str, Any]:
+    override = ALGORITHM_METADATA_OVERRIDES.get(str(item["name"]), {})
+    data_types = [str(value) for value in item.get("inputs", [])]
+
+    return {
+        "validation_status": "文档校验",
+        "last_reviewed_at": "2026-06-01",
+        "difficulty": "进阶",
+        "official_docs_url": override.get("official_docs_url"),
+        "version": override.get("version", "请以官方文档最新稳定版为准"),
+        "installation": override.get(
+            "installation",
+            "优先使用官方安装说明或 Bioconda/Conda 环境隔离安装",
+        ),
+        "applicability": {
+            "species": ["Human", "Mouse", "Plant"],
+            "data_types": data_types or [str(item["category"])],
+            "experiment_types": [str(item["category_name"])],
+        },
+        "disclaimer": (
+            "软件版本和默认参数可能变化。正式分析前请结合官方文档、"
+            "数据规模和实验设计复核配置。"
+        ),
+    }
+
+
 def build_performance_json(
     x_axis: list[str],
     time_data: list[float],
@@ -607,7 +667,7 @@ def build_algorithm(
         else:
             inferred_tool_type = "命令行软件"
 
-    return {
+    item = {
         "name": name,
         "category": category,
         "category_key": category_key,
@@ -632,6 +692,8 @@ def build_algorithm(
             language=language,
         ),
     }
+    item["metadata_json"] = infer_algorithm_metadata({**item, "inputs": inputs})
+    return item
 
 
 def build_mock_algorithms() -> list[dict[str, Any]]:
@@ -1060,6 +1122,7 @@ def build_mock_algorithms() -> list[dict[str, Any]]:
 def seed_algorithms(db: Session) -> None:
     # Algorithm Gallery 按 name 做稳定 upsert，方便重复执行 init_db.py 刷新分类、文档和 benchmark。
     for item in build_mock_algorithms():
+        item["metadata_json"] = item.get("metadata_json") or infer_algorithm_metadata(item)
         algorithm = db.scalar(select(Algorithm).where(Algorithm.name == item["name"]))
         if algorithm is None:
             db.add(Algorithm(**item))
@@ -1071,6 +1134,7 @@ def seed_algorithms(db: Session) -> None:
         algorithm.tool_type = item["tool_type"]
         algorithm.summary = item["summary"]
         algorithm.performance_json = item["performance_json"]
+        algorithm.metadata_json = item["metadata_json"]
         algorithm.markdown_docs = item["markdown_docs"]
 
     db.commit()

@@ -12,6 +12,7 @@ class AlgorithmBase(BaseModel):
     tool_type: str = Field(..., max_length=80)
     summary: str = Field(..., max_length=500)
     performance_json: dict[str, Any]
+    metadata_json: dict[str, Any] = Field(default_factory=dict)
     markdown_docs: str
 
 

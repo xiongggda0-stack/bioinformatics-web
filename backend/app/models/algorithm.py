@@ -25,6 +25,7 @@ class Algorithm(Base):
     summary: Mapped[str] = mapped_column(String(500), nullable=False)
     # Benchmark data consumed by the frontend ECharts component.
     performance_json: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    metadata_json: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False, default=dict)
     markdown_docs: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False

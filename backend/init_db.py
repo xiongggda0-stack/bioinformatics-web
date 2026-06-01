@@ -35,6 +35,12 @@ def init_db() -> None:
         db.execute(
             text(
                 "ALTER TABLE algorithms "
+                "ADD COLUMN IF NOT EXISTS metadata_json JSON NOT NULL DEFAULT '{}'"
+            )
+        )
+        db.execute(
+            text(
+                "ALTER TABLE algorithms "
                 "ADD COLUMN IF NOT EXISTS category_key VARCHAR(80) NOT NULL DEFAULT 'other'"
             )
         )

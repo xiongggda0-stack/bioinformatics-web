@@ -6758,12 +6758,23 @@ def infer_pipeline_metadata(item: dict[str, Any]) -> dict[str, Any]:
     }
 
     return {
+        "validation_status": "文档校验",
+        "last_reviewed_at": "2026-06-01",
         "difficulty": difficulty,
         "tools": tools[:8],
         "inputs": inputs[:6],
         "outputs": outputs[:6],
         "estimated_time": estimated_time,
         "scenario": scenario_by_type.get(omics_type, omics_type),
+        "applicability": {
+            "species": ["Human", "Mouse", "Plant"],
+            "data_types": inputs[:6] or [omics_type],
+            "experiment_types": [scenario_by_type.get(omics_type, omics_type)],
+        },
+        "disclaimer": (
+            "本文档用于教学与流程设计参考。运行前请根据物种、参考基因组版本、"
+            "测序平台和计算环境复核命令与参数。"
+        ),
     }
 
 
