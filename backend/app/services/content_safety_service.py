@@ -8,10 +8,10 @@ EXCERPT_MAX_LENGTH = 160
 REDACTED = "[REDACTED]"
 
 _PLACEHOLDER_TEXT = r"(?:<YOUR_[A-Z0-9_]+>|\$\{[A-Z_][A-Z0-9_]*\})"
-_VALUE_TEXT = r"(?:\"[^\"\r\n]{1,512}\"|'[^'\r\n]{1,512}'|[^\s\"'`]{1,512})"
+_VALUE_TEXT = r"(?:\"[^\"\r\n]+\"|'[^'\r\n]+'|[^\s\"'`]+)"
 _PLACEHOLDER_PATTERN = re.compile(rf"^{_PLACEHOLDER_TEXT}$", re.IGNORECASE)
 _PLACEHOLDER_SEARCH_PATTERN = re.compile(_PLACEHOLDER_TEXT, re.IGNORECASE)
-_LOGIN_COMMAND_PATTERN = re.compile(r"\blogin\b[^\r\n]{0,512}", re.IGNORECASE)
+_LOGIN_COMMAND_PATTERN = re.compile(r"\blogin\b[^\r\n]*", re.IGNORECASE)
 _LOGIN_OPTION_PATTERN = re.compile(
     rf"(?:^|\s)(?:--(?:username|password)|-[up])"
     rf"(?:\s*=\s*|\s+)(?P<value>{_VALUE_TEXT})",
@@ -73,7 +73,7 @@ _PRIVATE_IP_PATTERN = re.compile(
     rf"10(?:\.{_IP_OCTET}){{3}}"
     rf"|192\.168(?:\.{_IP_OCTET}){{2}}"
     rf"|172\.(?:1[6-9]|2[0-9]|3[01])(?:\.{_IP_OCTET}){{2}}"
-    rf")(?::[0-9]{{1,5}})?(?:/[^\s\"'`\\]{{0,384}})?"
+    rf")(?![\d.])(?::[0-9]{{1,5}})?(?:/[^\s\"'`\\]{{0,384}})?"
 )
 _PRIVATE_DOMAIN_PATTERN = re.compile(
     r"(?<![A-Za-z0-9.-])(?:https?://)?"
@@ -130,6 +130,28 @@ def _is_placeholder(value: str) -> bool:
 
 def _contains_placeholder(value: str) -> bool:
     return _PLACEHOLDER_SEARCH_PATTERN.search(_unquote(value)) is not None
+
+
+def _uri_authority_contains_placeholder(value: str) -> bool:
+    authority = value.split("/", maxsplit=1)[0]
+    return _contains_placeholder(authority)
+
+
+def _windows_sensitive_component_contains_placeholder(value: str) -> bool:
+    components = [
+        component
+        for component in re.split(r"[\\/]+", value[3:])
+        if component
+    ]
+    if not components:
+        return False
+    if _contains_placeholder(components[0]):
+        return True
+    return (
+        components[0].lower() == "users"
+        and len(components) > 1
+        and _contains_placeholder(components[1])
+    )
 
 
 def _is_ignored_path_user(value: str) -> bool:
@@ -197,17 +219,17 @@ def _find_line_matches(line: str) -> list[_LineMatch]:
         matches.append(_LineMatch("email", match.start(), match.end()))
 
     for match in _WINDOWS_ABSOLUTE_PATH_PATTERN.finditer(line):
-        if not _contains_placeholder(match.group(0)):
+        if not _windows_sensitive_component_contains_placeholder(match.group(0)):
             matches.append(
                 _LineMatch("windows-absolute-path", match.start(), match.end())
             )
 
     for match in _CLOUD_URI_PATTERN.finditer(line):
-        if not _contains_placeholder(match.group("value")):
+        if not _uri_authority_contains_placeholder(match.group("value")):
             matches.append(_LineMatch("private-locator", match.start(), match.end()))
 
     for match in _HDFS_URI_PATTERN.finditer(line):
-        if not _contains_placeholder(match.group("value")):
+        if not _uri_authority_contains_placeholder(match.group("value")):
             matches.append(_LineMatch("private-locator", match.start(), match.end()))
 
     for pattern in (

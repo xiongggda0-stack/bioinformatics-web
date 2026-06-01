@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from app.services.content_safety_service import scan_public_content, scan_text
+from scripts import scan_public_content as scan_script
 
 
 def rule_names(text: str) -> set[str]:
@@ -209,6 +210,20 @@ def test_private_locator_placeholders_are_not_reported(text: str) -> None:
 
 
 @pytest.mark.parametrize(
+    ("text", "expected_rule"),
+    [
+        ("s3://private-demo-bucket/${FOLDER}/input.fastq.gz", "private-locator"),
+        (r"C:\Users\alice-lab-user\${PROJECT_DIR}", "windows-absolute-path"),
+    ],
+)
+def test_locator_placeholder_only_ignores_sensitive_component(
+    text: str,
+    expected_rule: str,
+) -> None:
+    assert expected_rule in rule_names(text)
+
+
+@pytest.mark.parametrize(
     "text",
     [
         r"C:\Users\<YOUR_USERNAME>\tutorial\input.fastq.gz",
@@ -236,6 +251,18 @@ def test_windows_absolute_path_placeholders_are_not_reported(text: str) -> None:
     ],
 )
 def test_private_locator_ignores_common_data_directories(text: str) -> None:
+    assert "private-locator" not in rule_names(text)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "10.0.0.999",
+        "192.168.0.999",
+        "172.16.0.999",
+    ],
+)
+def test_private_locator_ignores_invalid_private_ip_prefixes(text: str) -> None:
     assert "private-locator" not in rule_names(text)
 
 
@@ -281,6 +308,29 @@ def test_finding_excerpt_redacts_sensitive_value_and_is_length_limited() -> None
 
     assert len(findings) == 1
     assert secret not in findings[0].excerpt
+    assert "[REDACTED]" in findings[0].excerpt
+    assert len(findings[0].excerpt) <= 160
+
+
+@pytest.mark.parametrize(
+    "line_prefix",
+    [
+        "token = ",
+        "password = ",
+        "./lnd login -u alice-lab-user -p ",
+    ],
+)
+def test_finding_excerpt_redacts_entire_overlong_sensitive_value(
+    line_prefix: str,
+) -> None:
+    secret = "s" * 600
+    findings = scan_text(
+        f"{line_prefix}{secret} visible-context " + ("x" * 300),
+        source_path="sample.md",
+    )
+
+    assert len(findings) == 1
+    assert "s" * 20 not in findings[0].excerpt
     assert "[REDACTED]" in findings[0].excerpt
     assert len(findings[0].excerpt) <= 160
 
@@ -371,3 +421,27 @@ def test_scan_script_reports_missing_root_and_returns_nonzero(tmp_path: Path) ->
 
     assert completed.returncode != 0
     assert "does not exist" in completed.stderr
+
+
+@pytest.mark.parametrize(
+    "error",
+    [
+        PermissionError("permission denied"),
+        OSError("read failed"),
+    ],
+)
+def test_scan_script_reports_os_errors_without_traceback(
+    error: OSError,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    def raise_error(root: Path) -> list[object]:
+        raise error
+
+    monkeypatch.setattr(scan_script, "scan_public_content", raise_error)
+
+    assert scan_script.main([]) == 2
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == f"Public content safety scan failed: {error}\n"
+    assert "Traceback" not in captured.err

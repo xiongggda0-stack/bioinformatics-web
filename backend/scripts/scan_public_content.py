@@ -18,7 +18,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     try:
         findings = scan_public_content(args.root)
-    except (FileNotFoundError, NotADirectoryError) as error:
+    except OSError as error:
         print(f"Public content safety scan failed: {error}", file=sys.stderr)
         return 2
 
