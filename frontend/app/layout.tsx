@@ -4,8 +4,9 @@ import Navbar from "@/components/Navbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "生信云平台 MVP",
-  description: "集分析流程、软件与算法、文献动态于一体的一站式生信云平台"
+  title: "生信知识平台",
+  description:
+    "面向公开浏览与学习复用的生信知识平台，连接分析流程、软件算法、数据库入口和文献证据。"
 };
 
 interface RootLayoutProps {

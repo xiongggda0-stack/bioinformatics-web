@@ -12,6 +12,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: "首页", href: "/" },
   { label: "分析流程", href: "/pipelines" },
+  { label: "学习路径", href: "/learning-paths" },
   { label: "软件与算法", href: "/algorithms" },
   { label: "数据库导航", href: "/databases" },
   { label: "文献集", href: "/literatures" }
@@ -37,11 +38,11 @@ export default function Navbar(): JSX.Element {
               Bio
             </span>
             <span className="text-base font-semibold tracking-tight text-ink">
-              生信云平台
+              生信知识平台
             </span>
           </Link>
 
-          <div className="hidden items-center gap-1 xl:flex">
+          <div className="hidden items-center gap-0.5 2xl:flex">
             {navItems.map((item) => {
               const active = isActivePath(pathname, item.href);
 
@@ -67,7 +68,7 @@ export default function Navbar(): JSX.Element {
             <GlobalSearch />
           </div>
 
-          <div className="flex items-center gap-1 overflow-x-auto xl:hidden">
+          <div className="flex items-center gap-1 overflow-x-auto 2xl:hidden">
             {navItems.map((item) => {
               const active = isActivePath(pathname, item.href);
 
