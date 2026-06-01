@@ -9,32 +9,32 @@ from app.models import Algorithm
 ALGORITHM_METADATA_OVERRIDES: dict[str, dict[str, str]] = {
     "STAR": {
         "official_docs_url": "https://github.com/alexdobin/STAR",
-        "version": "2.7.x",
+        "version": "2.7.11b（校验于 2026-06-01；执行前请以官方稳定版为准）",
         "installation": "Bioconda: mamba install -c bioconda star",
     },
     "Salmon": {
         "official_docs_url": "https://salmon.readthedocs.io/en/latest/",
-        "version": "1.10.x",
+        "version": "1.11.4（校验于 2026-06-01；执行前请以官方稳定版为准）",
         "installation": "Bioconda: mamba install -c bioconda salmon",
     },
     "featureCounts": {
         "official_docs_url": "https://subread.sourceforge.net/featureCounts.html",
-        "version": "Subread 2.x",
+        "version": "Subread 2.1.1（校验于 2026-06-01；执行前请以官方稳定版为准）",
         "installation": "Bioconda: mamba install -c bioconda subread",
     },
     "DESeq2": {
         "official_docs_url": "https://bioconductor.org/packages/release/bioc/html/DESeq2.html",
-        "version": "Bioconductor release",
+        "version": "1.52.0（校验于 2026-06-01；执行前请以官方稳定版为准）",
         "installation": 'Bioconductor: BiocManager::install("DESeq2")',
     },
     "Cell Ranger": {
         "official_docs_url": "https://www.10xgenomics.com/support/software/cell-ranger",
-        "version": "9.x",
+        "version": "10.0（校验于 2026-06-01；执行前请以官方稳定版为准）",
         "installation": "Download and install the official 10x Genomics tarball",
     },
     "Seurat v5": {
         "official_docs_url": "https://satijalab.org/seurat/",
-        "version": "5.x",
+        "version": "5.5.0（校验于 2026-06-01；执行前请以官方稳定版为准）",
         "installation": 'CRAN: install.packages("Seurat")',
     },
 }

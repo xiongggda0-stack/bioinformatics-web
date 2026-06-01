@@ -49,6 +49,37 @@ def test_all_algorithm_seeds_expose_public_trust_metadata(
         assert algorithm.metadata_json["applicability"]["experiment_types"]
 
 
+def test_core_algorithm_versions_expose_reviewed_versions_and_durable_reminder(
+    db_session: Session,
+) -> None:
+    seed_algorithms(db_session)
+    algorithms = {
+        algorithm.name: algorithm
+        for algorithm in db_session.scalars(select(Algorithm)).all()
+    }
+    expected_versions = {
+        "STAR": "2.7.11b",
+        "Salmon": "1.11.4",
+        "featureCounts": "Subread 2.1.1",
+        "DESeq2": "1.52.0",
+        "Cell Ranger": "10.0",
+        "Seurat v5": "5.5.0",
+    }
+
+    for name, expected_version in expected_versions.items():
+        version = algorithms[name].metadata_json["version"]
+        assert version
+        assert expected_version in version
+        assert "执行前请以官方稳定版为准" in version
+
+
+def test_algorithm_metadata_json_has_database_server_default() -> None:
+    server_default = Algorithm.__table__.c.metadata_json.server_default
+
+    assert server_default is not None
+    assert str(server_default.arg) == "'{}'"
+
+
 def test_algorithm_schema_serializes_metadata_json() -> None:
     payload = {
         "name": "STAR",
@@ -79,3 +110,12 @@ def test_algorithm_seed_upsert_restores_metadata_json(db_session: Session) -> No
 
     assert star.metadata_json["official_docs_url"].startswith("https://")
     assert star.metadata_json["last_reviewed_at"] == "2026-06-01"
+
+
+def test_algorithm_seed_is_idempotent(db_session: Session) -> None:
+    seed_algorithms(db_session)
+    algorithm_count = len(list(db_session.scalars(select(Algorithm)).all()))
+
+    seed_algorithms(db_session)
+
+    assert len(list(db_session.scalars(select(Algorithm)).all())) == algorithm_count
