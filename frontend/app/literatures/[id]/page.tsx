@@ -9,6 +9,7 @@ import RelatedResources, {
   type RelatedAlgorithm,
   type RelatedPipeline
 } from "@/components/RelatedResources";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
 
 interface Literature {
   id: number;
@@ -20,6 +21,7 @@ interface Literature {
   abstract_text: string;
   pipeline_id: number | null;
   algorithm_id: number | null;
+  content?: string;
 }
 
 interface LiteratureRelations {
@@ -93,22 +95,16 @@ export default async function LiteratureDetailPage({
   const badges: DetailBadge[] = [
     {
       label: literature.journal,
-      className: "bg-slate-950 text-cyan-50 ring-slate-950"
+      className: "bg-slate-900 text-white"
     },
     {
       label: String(literature.publication_year),
-      className: "bg-slate-100 text-slate-700 ring-slate-200"
+      className: "bg-slate-100 text-slate-600"
     }
   ];
   const metaItems: DetailMetaItem[] = [
-    {
-      label: "期刊",
-      value: literature.journal
-    },
-    {
-      label: "年份",
-      value: literature.publication_year
-    },
+    { label: "期刊", value: literature.journal },
+    { label: "年份", value: literature.publication_year },
     {
       label: "DOI",
       value: (
@@ -116,7 +112,7 @@ export default async function LiteratureDetailPage({
           href={`https://doi.org/${literature.doi}`}
           target="_blank"
           rel="noreferrer"
-          className="text-coral transition hover:text-teal"
+          className="text-accent transition-colors hover:text-accent-hover"
         >
           {literature.doi}
         </a>
@@ -154,7 +150,7 @@ export default async function LiteratureDetailPage({
               href={`https://doi.org/${literature.doi}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex rounded bg-teal px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal/90"
+              className="inline-flex rounded-md bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
             >
               打开 DOI 页面
             </a>
@@ -167,7 +163,7 @@ export default async function LiteratureDetailPage({
         title="作者信息"
         description="用于判断研究团队、方法出处和后续引用线索。"
       >
-        <p className="text-base leading-7 text-slate-700">
+        <p className="text-base leading-8 text-slate-700">
           {literature.authors.join(", ")}
         </p>
       </DetailSectionCard>

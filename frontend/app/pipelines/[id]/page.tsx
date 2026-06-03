@@ -111,8 +111,8 @@ function unwrapPayload<T>(payload: T | ApiResponse<T>): T {
     : (payload as T);
 }
 
-function getOmicsStyle(omicsType: string): string {
-  return omicsStyles[omicsType] ?? "bg-slate-100 text-slate-700 ring-slate-200";
+function getOmicsStyle(_omicsType: string): string {
+  return "bg-slate-100 text-slate-700";
 }
 
 function getDag(pipeline: Pipeline): PipelineDag {
@@ -165,7 +165,7 @@ function PipelineMetadataPanel({
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
             Difficulty
           </p>
-          <p className="mt-2 text-sm font-semibold text-ink">
+          <p className="mt-2 text-sm font-medium text-slate-900">
             {metadata.difficulty ?? "未标注"}
           </p>
         </div>
@@ -173,7 +173,7 @@ function PipelineMetadataPanel({
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
             Scenario
           </p>
-          <p className="mt-2 text-sm font-semibold text-ink">
+          <p className="mt-2 text-sm font-medium text-slate-900">
             {metadata.scenario ?? "通用分析"}
           </p>
         </div>
@@ -181,7 +181,7 @@ function PipelineMetadataPanel({
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
             Estimated Time
           </p>
-          <p className="mt-2 text-sm font-semibold text-ink">
+          <p className="mt-2 text-sm font-medium text-slate-900">
             {metadata.estimated_time ?? "视数据规模而定"}
           </p>
         </div>
@@ -248,9 +248,9 @@ function RecommendedDatabases({
           <Link
             key={item.name}
             href={`/databases?keyword=${encodeURIComponent(item.keyword)}`}
-            className="block rounded border border-slate-200 bg-slate-50 p-4 transition hover:border-teal hover:bg-white hover:shadow-sm"
+            className="block rounded-md border border-slate-200/60 bg-slate-50 p-4 transition-colors hover:border-slate-300 hover:bg-white"
           >
-            <p className="text-sm font-semibold text-ink">{item.name}</p>
+            <p className="text-sm font-semibold text-slate-900">{item.name}</p>
             <p className="mt-2 text-xs leading-5 text-slate-600">{item.reason}</p>
           </Link>
         ))}

@@ -9,10 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#102126",
-        mist: "#edf7f5",
-        teal: "#0f766e",
-        coral: "#f9735b"
+        accent: "#0d6b63",
+        "accent-hover": "#095650",
+        "accent-subtle": "#e6f2f0"
+      },
+      fontFamily: {
+        sans: ["var(--font-geist-sans)"],
+        mono: ["var(--font-geist-mono)"],
+        serif: ["var(--font-source-serif)"]
       }
     }
   },

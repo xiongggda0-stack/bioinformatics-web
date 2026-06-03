@@ -34,7 +34,7 @@ interface RelatedResourcesProps {
 
 function EmptyState({ text }: { text: string }): JSX.Element {
   return (
-    <p className="rounded border border-dashed border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500">
+    <p className="rounded-md border border-dashed border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-400">
       {text}
     </p>
   );
@@ -45,7 +45,6 @@ export default function RelatedResources({
   algorithms = [],
   literatures = [],
   compact = false,
-  kicker = "Cross Links",
   title = "相关资源",
   emptyText = "暂无明确关联资源"
 }: RelatedResourcesProps): JSX.Element {
@@ -53,33 +52,27 @@ export default function RelatedResources({
     pipelines.length > 0 || algorithms.length > 0 || literatures.length > 0;
 
   return (
-    <section className="rounded border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="border-b border-slate-100 pb-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal">
-          {kicker}
-        </p>
-        <h2 className="mt-2 text-lg font-semibold text-ink">{title}</h2>
-      </div>
+    <section>
+      <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.12em] text-slate-400">
+        {title}
+      </h2>
 
-      <div className={compact ? "mt-5 space-y-4" : "mt-5 grid gap-4 md:grid-cols-2"}>
+      <div className={compact ? "space-y-3" : "grid gap-3 md:grid-cols-2"}>
         {!hasResources ? <EmptyState text={emptyText} /> : null}
 
         {pipelines.map((pipeline) => (
           <Link
             key={`pipeline-${pipeline.id}`}
             href={`/pipelines/${pipeline.id}`}
-            className="block rounded border border-teal/25 bg-teal-50/40 p-4 transition hover:-translate-y-0.5 hover:border-teal hover:bg-white hover:shadow-sm"
+            className="block rounded-md border border-slate-200/60 bg-white p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300"
           >
-            <span className="text-xs font-semibold text-teal">分析流程</span>
-            <h3 className="mt-2 text-sm font-semibold leading-6 text-ink">
+            <span className="text-xs font-medium text-accent">分析流程</span>
+            <h3 className="mt-1 text-sm font-semibold text-slate-900">
               {pipeline.title}
             </h3>
-            <p className="mt-2 line-clamp-3 text-xs leading-5 text-slate-600">
+            <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">
               {pipeline.description}
             </p>
-            <span className="mt-3 inline-flex rounded bg-white px-2 py-1 text-[11px] font-semibold text-slate-600 ring-1 ring-slate-200">
-              {pipeline.omics_type}
-            </span>
           </Link>
         ))}
 
@@ -87,18 +80,15 @@ export default function RelatedResources({
           <Link
             key={`algorithm-${algorithm.id}`}
             href={`/algorithms/${algorithm.id}`}
-            className="block rounded border border-coral/25 bg-rose-50/40 p-4 transition hover:-translate-y-0.5 hover:border-coral hover:bg-white hover:shadow-sm"
+            className="block rounded-md border border-slate-200/60 bg-white p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300"
           >
-            <span className="text-xs font-semibold text-coral">软件与算法</span>
-            <h3 className="mt-2 text-sm font-semibold leading-6 text-ink">
+            <span className="text-xs font-medium text-indigo-500">软件与算法</span>
+            <h3 className="mt-1 text-sm font-semibold text-slate-900">
               {algorithm.name}
             </h3>
-            <p className="mt-2 line-clamp-3 text-xs leading-5 text-slate-600">
+            <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">
               {algorithm.summary}
             </p>
-            <span className="mt-3 inline-flex rounded bg-white px-2 py-1 text-[11px] font-semibold text-slate-600 ring-1 ring-slate-200">
-              {algorithm.category}
-            </span>
           </Link>
         ))}
 
@@ -106,17 +96,15 @@ export default function RelatedResources({
           <Link
             key={`literature-${literature.id}`}
             href={`/literatures/${literature.id}`}
-            className="block rounded border border-slate-200 bg-slate-50 p-4 transition hover:-translate-y-0.5 hover:border-slate-400 hover:bg-white hover:shadow-sm"
+            className="block rounded-md border border-slate-200/60 bg-white p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300"
           >
-            <span className="text-xs font-semibold text-slate-500">
-              {literature.journal} · {literature.publication_year}
+            <span className="text-xs font-medium text-amber-600">
+              {literature.journal} &middot; {literature.publication_year}
             </span>
-            <h3 className="mt-2 text-sm font-semibold leading-6 text-ink">
+            <h3 className="mt-1 text-sm font-semibold text-slate-900">
               {literature.title}
             </h3>
-            <p className="mt-2 text-xs font-medium text-slate-500">
-              DOI: {literature.doi}
-            </p>
+            <p className="mt-1 text-xs text-slate-400">DOI: {literature.doi}</p>
           </Link>
         ))}
       </div>

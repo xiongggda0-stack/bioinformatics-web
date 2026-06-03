@@ -81,22 +81,7 @@ const backendFilterKeys: Array<Exclude<keyof PipelineFilters, "category">> = [
   "scenario"
 ];
 
-const omicsStyles: Record<string, string> = {
-  "RNA-Seq": "bg-emerald-50 text-emerald-700 ring-emerald-200",
-  "scRNA-Seq": "bg-sky-50 text-sky-700 ring-sky-200",
-  "CUT&Tag": "bg-amber-50 text-amber-700 ring-amber-200",
-  "BSA-seq": "bg-rose-50 text-rose-700 ring-rose-200",
-  "Spatial Transcriptomics": "bg-indigo-50 text-indigo-700 ring-indigo-200",
-  "Multi-omics": "bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200",
-  "Regulatory Network": "bg-cyan-50 text-cyan-700 ring-cyan-200",
-  "Pathway Analysis": "bg-lime-50 text-lime-700 ring-lime-200",
-  Immunogenomics: "bg-orange-50 text-orange-700 ring-orange-200",
-  "Cancer Transcriptomics": "bg-red-50 text-red-700 ring-red-200",
-  "Long-read Transcriptomics": "bg-teal-50 text-teal-700 ring-teal-200",
-  Translatomics: "bg-pink-50 text-pink-700 ring-pink-200",
-  "De novo Transcriptomics": "bg-stone-100 text-stone-700 ring-stone-300",
-  WGS: "bg-violet-50 text-violet-700 ring-violet-200"
-};
+const omicsStyles: Record<string, string> = {};
 
 const categoryDescriptions: Record<string, string> = {
   basic: "常规 RNA-seq 表达定量、差异表达、时间动态和非编码 RNA 分析。",
@@ -110,8 +95,8 @@ const categoryDescriptions: Record<string, string> = {
   other: "暂未归入固定方向的补充流程。"
 };
 
-function getOmicsStyle(omicsType: string): string {
-  return omicsStyles[omicsType] ?? "bg-slate-100 text-slate-700 ring-slate-200";
+function getOmicsStyle(_omicsType: string): string {
+  return "bg-slate-100 text-slate-700 ring-slate-200";
 }
 
 function uniqueSorted(values: string[]): string[] {
@@ -319,21 +304,21 @@ export default function PipelineBrowser({
 
   return (
     <div className="space-y-8">
-      <section className="rounded border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-md border border-slate-200/60 bg-white p-5">
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
           <label className="block">
-            <span className="text-sm font-semibold text-ink">搜索流程</span>
+            <span className="text-sm font-medium text-slate-700">搜索流程</span>
             <input
               value={filters.keyword}
               onChange={(event) => updateFilter("keyword", event.target.value)}
               placeholder="输入关键词，例如 DESeq2、WGCNA、肿瘤、单细胞、Trinity"
-              className="mt-2 h-11 w-full rounded border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-teal focus:ring-2 focus:ring-teal/20"
+              className="mt-2 h-10 w-full rounded-md border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-accent focus:bg-white focus:ring-2 focus:ring-accent/10"
             />
           </label>
           <button
             type="button"
             onClick={resetFilters}
-            className="h-11 rounded border border-slate-300 bg-slate-50 px-4 text-sm font-semibold text-slate-700 transition hover:border-teal hover:bg-white hover:text-teal"
+            className="h-10 rounded-md border border-slate-200 bg-white px-4 text-sm font-medium text-slate-600 transition-colors hover:border-slate-400 hover:text-slate-900"
           >
             重置筛选
           </button>
@@ -394,25 +379,25 @@ export default function PipelineBrowser({
           />
         </div>
 
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4 text-sm text-slate-600">
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4 text-sm text-slate-500">
           <p>
             当前显示{" "}
-            <span className="font-semibold text-ink">{visiblePipelines.length}</span> /{" "}
-            <span className="font-semibold text-ink">{allPipelines.length}</span> 个流程
+            <span className="font-medium text-slate-900">{visiblePipelines.length}</span> /{" "}
+            <span className="font-medium text-slate-900">{allPipelines.length}</span> 个流程
           </p>
           <div className="flex items-center gap-2">
             {activeFilterCount > 0 ? (
-              <span className="rounded bg-teal/10 px-2.5 py-1 text-xs font-semibold text-teal">
+              <span className="rounded-full bg-accent-subtle px-2.5 py-0.5 text-xs font-medium text-accent">
                 {activeFilterCount} 个筛选条件
               </span>
             ) : null}
             {isPending ? (
-              <span className="rounded bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">
+              <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500">
                 正在同步 URL...
               </span>
             ) : null}
             {isFetching ? (
-              <span className="rounded bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700">
+              <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500">
                 正在查询后端...
               </span>
             ) : null}
@@ -421,8 +406,8 @@ export default function PipelineBrowser({
       </section>
 
       {visiblePipelines.length === 0 ? (
-        <div className="rounded border border-dashed border-slate-300 bg-white p-10 text-center">
-          <h2 className="text-lg font-semibold text-ink">没有匹配的流程</h2>
+        <div className="rounded-md border border-dashed border-slate-200 bg-white p-10 text-center">
+          <h2 className="text-lg font-semibold text-slate-900">没有匹配的流程</h2>
           <p className="mt-2 text-sm text-slate-500">
             换一个关键词，或清空分类、标签、工具等筛选条件。
           </p>
@@ -431,22 +416,22 @@ export default function PipelineBrowser({
         <div className="space-y-12">
           {groups.map((group) => (
             <section key={group.key}>
-              <div className="mb-5 flex flex-wrap items-end justify-between gap-4 border-b border-slate-200 pb-4">
+              <div className="mb-5 flex flex-wrap items-end justify-between gap-4 border-b border-slate-100 pb-4">
                 <div>
-                  <h2 className="text-2xl font-bold tracking-tight text-ink">
+                  <h2 className="text-xl font-semibold text-slate-900">
                     {group.title}
                   </h2>
-                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+                  <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-500">
                     {group.description}
                   </p>
                 </div>
-                <span className="rounded bg-white px-3 py-1 text-xs font-semibold text-slate-500 ring-1 ring-slate-200">
+                <span className="text-xs font-medium text-slate-400">
                   {group.pipelines.length} workflows
                 </span>
               </div>
-              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              <div className="divide-y divide-slate-100 rounded-md border border-slate-200/60 bg-white">
                 {group.pipelines.map((pipeline) => (
-                  <PipelineCard key={pipeline.id} pipeline={pipeline} />
+                  <PipelineRow key={pipeline.id} pipeline={pipeline} />
                 ))}
               </div>
             </section>
@@ -472,13 +457,13 @@ function FilterSelect({
 }): JSX.Element {
   return (
     <label className="block">
-      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+      <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
         {label}
       </span>
       <select
         value={value === "all" ? "" : value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm text-slate-800 outline-none transition focus:border-teal focus:ring-2 focus:ring-teal/20"
+        className="mt-2 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/10"
       >
         <option value="">{placeholder}</option>
         {options.map((option) => (
@@ -491,58 +476,36 @@ function FilterSelect({
   );
 }
 
-function PipelineCard({ pipeline }: { pipeline: Pipeline }): JSX.Element {
+function PipelineRow({ pipeline }: { pipeline: Pipeline }): JSX.Element {
   return (
     <Link
       href={`/pipelines/${pipeline.id}`}
-      className="group rounded border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-teal hover:shadow-md"
+      className="flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-slate-50"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-wrap gap-2">
-          <span
-            className={`inline-flex rounded px-3 py-1 text-xs font-semibold ring-1 ${getOmicsStyle(
-              pipeline.omics_type
-            )}`}
-          >
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="text-base font-semibold text-slate-900">
+            {pipeline.title}
+          </h3>
+          <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-500">
             {pipeline.omics_type}
           </span>
-          <span className="inline-flex rounded bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 ring-1 ring-slate-200">
+          <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-500">
             {pipeline.category_name}
           </span>
           {pipeline.metadata_json.difficulty ? (
-            <span className="inline-flex rounded bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 ring-1 ring-slate-200">
+            <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-500">
               {pipeline.metadata_json.difficulty}
             </span>
           ) : null}
         </div>
-        <span className="text-xs text-slate-400">#{pipeline.id}</span>
+        <p className="mt-1 line-clamp-1 text-sm text-slate-500">
+          {pipeline.description}
+        </p>
       </div>
-      <h3 className="mt-5 text-xl font-semibold leading-7 text-ink">
-        {pipeline.title}
-      </h3>
-      <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">
-        {pipeline.description}
-      </p>
-      {pipeline.metadata_json.tools?.length ? (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {pipeline.metadata_json.tools.slice(0, 4).map((tool) => (
-            <span
-              key={tool}
-              className="rounded bg-sky-50 px-2.5 py-1 text-xs font-medium text-sky-700"
-            >
-              {tool}
-            </span>
-          ))}
-        </div>
-      ) : null}
-      <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
-        <span className="text-xs text-slate-500">
-          {new Date(pipeline.created_at).toLocaleDateString("zh-CN")}
-        </span>
-        <span className="text-sm font-semibold text-teal transition group-hover:text-coral">
-          查看详情
-        </span>
-      </div>
+      <span className="shrink-0 text-xs text-slate-400">
+        {new Date(pipeline.created_at).toLocaleDateString("zh-CN")}
+      </span>
     </Link>
   );
 }

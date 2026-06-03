@@ -7,9 +7,13 @@ import SearchResultCard from "@/components/SearchResultCard";
 import { fetchSearchResults } from "@/lib/searchApi";
 import type { SearchResultItem } from "@/lib/searchTypes";
 
-export default function GlobalSearch(): JSX.Element {
+interface SearchDropdownProps {
+  size: "sm" | "lg";
+}
+
+export default function SearchDropdown({ size }: SearchDropdownProps): JSX.Element {
   const router = useRouter();
-  const searchRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [keyword, setKeyword] = useState("");
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +21,9 @@ export default function GlobalSearch(): JSX.Element {
   const [hasError, setHasError] = useState(false);
   const trimmedKeyword = keyword.trim();
   const searchHref = `/search?q=${encodeURIComponent(trimmedKeyword)}`;
+
+  const height = size === "lg" ? "h-14" : "h-9";
+  const textSize = size === "lg" ? "text-base" : "text-sm";
 
   useEffect(() => {
     if (trimmedKeyword.length < 2) {
@@ -39,7 +46,6 @@ export default function GlobalSearch(): JSX.Element {
           clientSide: true,
           signal: controller.signal
         });
-
         setResults(response.items);
       } catch {
         if (!controller.signal.aborted) {
@@ -54,7 +60,6 @@ export default function GlobalSearch(): JSX.Element {
     }
 
     const timer = window.setTimeout(runSearch, 250);
-
     return () => {
       controller.abort();
       window.clearTimeout(timer);
@@ -63,14 +68,10 @@ export default function GlobalSearch(): JSX.Element {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent): void {
-      if (
-        searchRef.current &&
-        !searchRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -78,47 +79,42 @@ export default function GlobalSearch(): JSX.Element {
   const showPanel = isOpen && trimmedKeyword.length >= 2;
 
   return (
-    <div ref={searchRef} className="relative w-full max-w-md">
-      <label htmlFor="global-search" className="sr-only">
-        搜索全站内容
-      </label>
+    <div ref={containerRef} className="relative w-full">
       <div className="relative">
-        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base text-slate-400">
-          ⌕
+        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+          <SearchIcon />
         </span>
         <input
-          id="global-search"
           value={keyword}
-          onChange={(event) => {
-            setKeyword(event.target.value);
+          onChange={(e) => {
+            setKeyword(e.target.value);
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" && trimmedKeyword.length >= 2) {
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && trimmedKeyword.length >= 2) {
               setIsOpen(false);
               router.push(searchHref);
             }
-
-            if (event.key === "Escape") {
+            if (e.key === "Escape") {
               setIsOpen(false);
             }
           }}
           placeholder="搜索流程、软件、数据库和文献"
-          className="h-10 w-full rounded border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm text-ink outline-none transition placeholder:text-slate-400 focus:border-teal focus:bg-white focus:ring-2 focus:ring-teal/15"
+          className={`${height} ${textSize} w-full rounded-md border border-slate-200 bg-slate-50 pl-9 pr-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-accent focus:bg-white focus:ring-2 focus:ring-accent/10`}
         />
       </div>
 
       {showPanel ? (
-        <div className="absolute right-0 top-12 z-50 w-[min(92vw,38rem)] overflow-hidden rounded border border-slate-200 bg-white shadow-lg">
+        <div className="absolute right-0 top-full z-50 mt-1 w-[min(92vw,38rem)] overflow-hidden rounded-md border border-slate-200 bg-white shadow-lg">
           <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
               全站搜索
             </p>
             <Link
               href={searchHref}
               onClick={() => setIsOpen(false)}
-              className="text-xs font-semibold text-slate-500 transition hover:text-teal"
+              className="text-xs font-medium text-slate-500 transition-colors hover:text-slate-700"
             >
               查看全部结果
             </Link>
@@ -126,17 +122,17 @@ export default function GlobalSearch(): JSX.Element {
 
           <div className="max-h-[70vh] overflow-y-auto p-2">
             {isLoading ? (
-              <p className="px-3 py-4 text-sm text-slate-500">正在搜索...</p>
+              <p className="px-3 py-4 text-sm text-slate-400">正在搜索...</p>
             ) : null}
 
             {!isLoading && hasError ? (
-              <p className="px-3 py-4 text-sm text-slate-500">
+              <p className="px-3 py-4 text-sm text-slate-400">
                 搜索服务暂时不可用，请稍后重试。
               </p>
             ) : null}
 
             {!isLoading && !hasError && results.length === 0 ? (
-              <p className="px-3 py-4 text-sm text-slate-500">
+              <p className="px-3 py-4 text-sm text-slate-400">
                 没有找到匹配内容，试试 RNA-seq、Seurat、GEO 或 WGCNA。
               </p>
             ) : null}
@@ -155,5 +151,13 @@ export default function GlobalSearch(): JSX.Element {
         </div>
       ) : null}
     </div>
+  );
+}
+
+function SearchIcon(): JSX.Element {
+  return (
+    <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor">
+      <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z" />
+    </svg>
   );
 }

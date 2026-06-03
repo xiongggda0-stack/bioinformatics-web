@@ -127,13 +127,13 @@ export default function BenchmarkChart({
   };
 
   return (
-    <section className="mb-8 rounded border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="mb-8 rounded-md border border-slate-200/60 bg-white p-6">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 pb-4">
         <div>
-          <h2 className="text-lg font-semibold text-ink">性能基准测试</h2>
+          <h2 className="text-lg font-semibold text-slate-900">性能基准测试</h2>
           <p className="mt-1 text-sm text-slate-500">{benchmark.environment}</p>
         </div>
-        <span className="rounded bg-cyan-50 px-3 py-1 text-xs font-semibold text-cyan-700 ring-1 ring-cyan-200">
+        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-500">
           Benchmark
         </span>
       </div>

@@ -21,39 +21,36 @@ export default function PageHeader({
   children
 }: PageHeaderProps): JSX.Element {
   return (
-    <section className="border-b border-slate-200 bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-12">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+    <section className="border-b border-slate-100 bg-white">
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-teal">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
               {eyebrow}
             </p>
-            <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight text-ink">
+            <h1 className="mt-3 max-w-4xl text-2xl font-semibold tracking-tight text-slate-900 md:text-3xl">
               {title}
             </h1>
-            <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-500">
               {description}
             </p>
           </div>
 
           {stats.length > 0 ? (
-            <div className="grid min-w-[220px] grid-cols-2 gap-3">
+            <div className="flex gap-6">
               {stats.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="rounded border border-slate-200 bg-slate-50 px-4 py-3"
-                >
-                  <p className="text-2xl font-bold text-ink">{stat.value}</p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                    {stat.label}
+                <div key={stat.label} className="text-right">
+                  <p className="text-2xl font-bold tabular-nums text-slate-900">
+                    {stat.value}
                   </p>
+                  <p className="mt-0.5 text-xs text-slate-400">{stat.label}</p>
                 </div>
               ))}
             </div>
           ) : null}
         </div>
 
-        {children ? <div className="mt-6">{children}</div> : null}
+        {children ? <div className="mt-5">{children}</div> : null}
       </div>
     </section>
   );

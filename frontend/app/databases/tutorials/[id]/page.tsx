@@ -74,10 +74,10 @@ function TutorialSteps({ steps }: { steps: string[] }): JSX.Element {
             key={step}
             className="rounded border border-slate-200 bg-slate-50 p-4"
           >
-            <span className="text-xs font-semibold text-teal">
+            <span className="text-xs font-semibold text-accent">
               STEP {index + 1}
             </span>
-            <p className="mt-2 text-sm font-semibold leading-6 text-ink">
+            <p className="mt-2 text-sm font-medium leading-6 text-slate-900">
               {step}
             </p>
           </li>
@@ -109,9 +109,9 @@ function PipelineSuggestionCard({
           <Link
             key={item.title}
             href={item.href}
-            className="block rounded border border-slate-200 bg-slate-50 p-4 transition hover:border-teal hover:bg-white hover:shadow-sm"
+            className="block rounded-md border border-slate-200/60 bg-slate-50 p-4 transition-colors hover:border-slate-300 hover:bg-white"
           >
-            <p className="text-sm font-semibold text-ink">{item.title}</p>
+            <p className="text-sm font-semibold text-slate-900">{item.title}</p>
             <p className="mt-2 text-xs leading-5 text-slate-600">{item.reason}</p>
           </Link>
         ))}
@@ -134,7 +134,7 @@ export default async function DatabaseTutorialPage({
   const badges: DetailBadge[] = [
     {
       label: resource.name,
-      className: "bg-teal/10 text-teal ring-teal/20"
+      className: "bg-accent-subtle text-accent"
     },
     {
       label: resource.categoryName,
@@ -184,7 +184,7 @@ export default async function DatabaseTutorialPage({
                 href={resource.url}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded bg-teal px-3 py-2 text-xs font-semibold text-white transition hover:bg-teal/90"
+                className="rounded-md bg-accent px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-accent-hover"
               >
                 访问数据库
               </a>
@@ -192,7 +192,7 @@ export default async function DatabaseTutorialPage({
                 href={tutorial.entryUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-teal hover:text-teal"
+                className="rounded-md border border-slate-200 px-3 py-2 text-xs font-medium text-slate-600 transition-colors hover:border-slate-400 hover:text-slate-900"
               >
                 官方入口
               </a>

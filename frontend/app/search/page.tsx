@@ -69,7 +69,7 @@ export default async function SearchPage({
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-white">
       <PageHeader
         eyebrow="Search Center"
         title="全站搜索"
@@ -90,11 +90,11 @@ export default async function SearchPage({
             name="q"
             defaultValue={query}
             placeholder="输入关键词，例如 RNA-seq、Seurat、GEO、WGCNA"
-            className="h-12 flex-1 rounded border border-slate-300 bg-white px-4 text-sm text-ink outline-none transition placeholder:text-slate-400 focus:border-teal focus:ring-2 focus:ring-teal/15"
+            className="h-12 flex-1 rounded-md border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-accent focus:bg-white focus:ring-2 focus:ring-accent/10"
           />
           <button
             type="submit"
-            className="h-12 rounded bg-teal px-6 text-sm font-semibold text-white transition hover:bg-teal/90"
+            className="h-12 rounded-md bg-accent px-6 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
           >
             搜索
           </button>
@@ -111,10 +111,10 @@ export default async function SearchPage({
               <Link
                 key={tab.type}
                 href={href}
-                className={`shrink-0 rounded px-3 py-2 text-sm font-medium transition ${
+                className={`shrink-0 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-teal text-white"
-                    : "border border-slate-200 bg-white text-slate-600 hover:border-teal hover:text-teal"
+                    ? "bg-slate-900 text-white"
+                    : "border border-slate-200 bg-white text-slate-600 hover:border-slate-400 hover:text-slate-900"
                 }`}
               >
                 {tab.label} {getTabCount(tab.type, response)}
@@ -125,7 +125,7 @@ export default async function SearchPage({
 
         <div className="mt-6">
           {hasError ? (
-            <div className="rounded border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-700">
+            <div className="rounded-md border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
               搜索服务暂时不可用，请稍后重试。
             </div>
           ) : (

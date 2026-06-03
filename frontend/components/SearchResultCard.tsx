@@ -15,14 +15,6 @@ const resultTypeLabels: Record<SearchItemType, string> = {
   literature: "文献"
 };
 
-const resultTypeStyles: Record<SearchItemType, string> = {
-  pipeline: "bg-teal/10 text-teal ring-teal/20",
-  algorithm: "bg-rose-50 text-coral ring-coral/20",
-  database: "bg-sky-50 text-sky-700 ring-sky-200",
-  tutorial: "bg-amber-50 text-amber-700 ring-amber-200",
-  literature: "bg-slate-100 text-slate-700 ring-slate-200"
-};
-
 export default function SearchResultCard({
   item,
   compact = false,
@@ -32,26 +24,24 @@ export default function SearchResultCard({
     <Link
       href={item.href}
       onClick={onNavigate}
-      className={`block rounded border border-transparent transition hover:border-slate-200 hover:bg-slate-50 ${
-        compact ? "p-3" : "bg-white p-5 shadow-sm"
+      className={`block rounded-md transition-colors hover:bg-slate-50 ${
+        compact ? "p-3" : "p-4"
       }`}
     >
       <div className="flex items-start gap-3">
-        <span
-          className={`mt-0.5 shrink-0 rounded px-2 py-1 text-[11px] font-semibold ring-1 ${resultTypeStyles[item.type]}`}
-        >
+        <span className="mt-0.5 shrink-0 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-500">
           {resultTypeLabels[item.type]}
         </span>
         <div className="min-w-0">
           <h2
-            className={`font-semibold text-ink ${
+            className={`font-semibold text-slate-900 ${
               compact ? "truncate text-sm" : "text-base"
             }`}
           >
             {item.title}
           </h2>
           <p
-            className={`mt-1 text-slate-600 ${
+            className={`mt-1 text-slate-500 ${
               compact
                 ? "line-clamp-2 text-xs leading-5"
                 : "line-clamp-3 text-sm leading-6"
@@ -61,11 +51,11 @@ export default function SearchResultCard({
           </p>
 
           {!compact && item.tags.length > 0 ? (
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-2 flex flex-wrap gap-1.5">
               {item.tags.slice(0, 5).map((tag) => (
                 <span
                   key={tag}
-                  className="rounded bg-slate-100 px-2 py-1 text-xs text-slate-500"
+                  className="rounded bg-slate-50 px-2 py-0.5 text-xs text-slate-500"
                 >
                   {tag}
                 </span>

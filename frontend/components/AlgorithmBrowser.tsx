@@ -227,15 +227,15 @@ export default function AlgorithmBrowser({
 
   return (
     <div className="space-y-8">
-      <section className="rounded border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-md border border-slate-200/60 bg-white p-5">
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_260px_auto] lg:items-end">
           <label className="block">
-            <span className="text-sm font-semibold text-ink">搜索软件与算法</span>
+            <span className="text-sm font-medium text-slate-700">搜索软件与算法</span>
             <input
               value={filters.keyword}
               onChange={(event) => updateFilter("keyword", event.target.value)}
               placeholder="输入关键词，例如 STAR、DESeq2、Seurat、WGCNA、peak calling"
-              className="mt-2 h-11 w-full rounded border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-teal focus:ring-2 focus:ring-teal/20"
+              className="mt-2 h-10 w-full rounded-md border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-accent focus:bg-white focus:ring-2 focus:ring-accent/10"
             />
           </label>
 
@@ -253,31 +253,31 @@ export default function AlgorithmBrowser({
           <button
             type="button"
             onClick={resetFilters}
-            className="h-11 rounded border border-slate-300 bg-slate-50 px-4 text-sm font-semibold text-slate-700 transition hover:border-teal hover:bg-white hover:text-teal"
+            className="h-10 rounded-md border border-slate-200 bg-white px-4 text-sm font-medium text-slate-600 transition-colors hover:border-slate-400 hover:text-slate-900"
           >
             重置筛选
           </button>
         </div>
 
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4 text-sm text-slate-600">
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4 text-sm text-slate-500">
           <p>
             当前显示{" "}
-            <span className="font-semibold text-ink">{serverAlgorithms.length}</span> /{" "}
-            <span className="font-semibold text-ink">{allAlgorithms.length}</span> 个软件与算法
+            <span className="font-medium text-slate-900">{serverAlgorithms.length}</span> /{" "}
+            <span className="font-medium text-slate-900">{allAlgorithms.length}</span> 个软件与算法
           </p>
           <div className="flex items-center gap-2">
             {activeFilterCount > 0 ? (
-              <span className="rounded bg-teal/10 px-2.5 py-1 text-xs font-semibold text-teal">
+              <span className="rounded-full bg-accent-subtle px-2.5 py-0.5 text-xs font-medium text-accent">
                 {activeFilterCount} 个筛选条件
               </span>
             ) : null}
             {isPending ? (
-              <span className="rounded bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">
+              <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500">
                 正在同步 URL...
               </span>
             ) : null}
             {isFetching ? (
-              <span className="rounded bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700">
+              <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500">
                 正在查询后端...
               </span>
             ) : null}
@@ -286,8 +286,8 @@ export default function AlgorithmBrowser({
       </section>
 
       {serverAlgorithms.length === 0 ? (
-        <div className="rounded border border-dashed border-slate-300 bg-white p-10 text-center">
-          <h2 className="text-lg font-semibold text-ink">没有匹配的软件与算法</h2>
+        <div className="rounded-md border border-dashed border-slate-200 bg-white p-10 text-center">
+          <h2 className="text-lg font-semibold text-slate-900">没有匹配的软件与算法</h2>
           <p className="mt-2 text-sm text-slate-500">
             换一个关键词，或清空分类筛选条件后再试。
           </p>
@@ -296,23 +296,23 @@ export default function AlgorithmBrowser({
         <div className="space-y-12">
           {groups.map((group) => (
             <section key={group.key}>
-              <div className="mb-5 flex flex-wrap items-end justify-between gap-4 border-b border-slate-200 pb-4">
+              <div className="mb-5 flex flex-wrap items-end justify-between gap-4 border-b border-slate-100 pb-4">
                 <div>
-                  <h2 className="text-2xl font-bold tracking-tight text-ink">
+                  <h2 className="text-xl font-semibold text-slate-900">
                     {group.title}
                   </h2>
-                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+                  <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-500">
                     {group.description}
                   </p>
                 </div>
-                <span className="rounded bg-white px-3 py-1 text-xs font-semibold text-slate-500 ring-1 ring-slate-200">
+                <span className="text-xs font-medium text-slate-400">
                   {group.algorithms.length} tools
                 </span>
               </div>
 
-              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              <div className="divide-y divide-slate-100 rounded-md border border-slate-200/60 bg-white">
                 {group.algorithms.map((algorithm) => (
-                  <AlgorithmCard key={algorithm.id} algorithm={algorithm} />
+                  <AlgorithmRow key={algorithm.id} algorithm={algorithm} />
                 ))}
               </div>
             </section>
@@ -338,13 +338,13 @@ function FilterSelect({
 }): JSX.Element {
   return (
     <label className="block">
-      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+      <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
         {label}
       </span>
       <select
         value={value === "all" ? "" : value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 h-11 w-full rounded border border-slate-300 bg-white px-3 text-sm text-slate-800 outline-none transition focus:border-teal focus:ring-2 focus:ring-teal/20"
+        className="mt-2 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/10"
       >
         <option value="">{placeholder}</option>
         {options.map((option) => (
@@ -357,44 +357,31 @@ function FilterSelect({
   );
 }
 
-function AlgorithmCard({ algorithm }: { algorithm: Algorithm }): JSX.Element {
+function AlgorithmRow({ algorithm }: { algorithm: Algorithm }): JSX.Element {
   return (
     <Link
       href={`/algorithms/${algorithm.id}`}
-      className="group rounded border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-teal hover:shadow-md"
+      className="flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-slate-50"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-wrap gap-2">
-          <span
-            className={`inline-flex rounded px-3 py-1 text-xs font-semibold ring-1 ${getCategoryStyle(
-              algorithm.category_key
-            )}`}
-          >
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="text-base font-semibold text-slate-900">
+            {algorithm.name}
+          </h3>
+          <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-500">
             {algorithm.category_name}
           </span>
-          <span className="inline-flex rounded bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 ring-1 ring-slate-200">
-            {algorithm.category}
-          </span>
-          <span className="inline-flex rounded bg-white px-3 py-1 text-xs font-semibold text-slate-500 ring-1 ring-slate-200">
+          <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-500">
             {algorithm.tool_type}
           </span>
         </div>
-        <span className="text-xs text-slate-400">#{algorithm.id}</span>
+        <p className="mt-1 line-clamp-1 text-sm text-slate-500">
+          {algorithm.summary}
+        </p>
       </div>
-      <h3 className="mt-5 text-xl font-semibold leading-7 text-ink">
-        {algorithm.name}
-      </h3>
-      <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">
-        {algorithm.summary}
-      </p>
-      <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
-        <span className="text-xs text-slate-500">
-          {new Date(algorithm.created_at).toLocaleDateString("zh-CN")}
-        </span>
-        <span className="text-sm font-semibold text-teal transition group-hover:text-coral">
-          查看原理
-        </span>
-      </div>
+      <span className="shrink-0 text-xs text-slate-400">
+        {new Date(algorithm.created_at).toLocaleDateString("zh-CN")}
+      </span>
     </Link>
   );
 }
