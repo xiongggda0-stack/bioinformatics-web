@@ -5,6 +5,7 @@ from app.api.v1.controllers.algorithm_controller import router as algorithm_rout
 from app.api.v1.controllers.database_controller import router as database_router
 from app.api.v1.controllers.health_controller import router as health_router
 from app.api.v1.controllers.literature_controller import router as literature_router
+from app.api.v1.controllers.literature_import_controller import router as literature_import_router
 from app.api.v1.controllers.pipeline_controller import router as pipeline_router
 from app.api.v1.controllers.search_controller import router as search_router
 from app.core.config import settings
@@ -38,6 +39,7 @@ def create_app() -> FastAPI:
     )
 
     register_exception_handlers(app)
+    app.include_router(literature_import_router)
     app.include_router(health_router)
     app.include_router(pipeline_router)
     app.include_router(algorithm_router)
