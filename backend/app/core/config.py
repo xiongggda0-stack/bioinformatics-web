@@ -8,6 +8,8 @@ class Settings(BaseSettings):
         "postgresql+psycopg2://bioinfo:bioinfo_password@localhost:5432/bioinfo"
     )
 
+    cors_origins: str = ""
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
